@@ -1,0 +1,227 @@
+\ProvidesPackage{tntdasa}
+\RequirePackage{scrpage2}
+\RequirePackage{ifthen}
+\RequirePackage{typearea}
+\RequirePackage{graphicx}
+%\DeclareOption{pdftex}{\DeclareGraphicsExtensions{.pdf,.tif,.jpg,.mps,.png}}
+\DeclareOption{bibcomment}{\newcommand{\tntbibcomment}[1]{{\small \textit{#1}}}}
+
+\ProcessOptions
+\defpagestyle{tntdasa}
+  {(0pt,0pt){\pagemark\hfill\headmark}
+            {\headmark\hfill\pagemark}
+            {\headmark\hfill\pagemark}(\textwidth,0.5pt)}
+  {(0pt,0pt){\hfill}
+            {\hfill}
+            {\hfill}(0pt,0pt)}
+\defpagestyle{tntnews}
+  {(\textwidth,0.5pt){\pagemark\hfill\headmark}
+            {\headmark\hfill\pagemark}
+            {\headmark\hfill\pagemark}(\textwidth,0.5pt)}
+  {(0pt,0pt){\hfill}
+            {\hfill}
+            {\hfill}(0pt,0pt)}
+
+%
+% Abstand zwischen den Absaetzen auf 1.5 Zeilen setzen
+%
+\setlength{\parskip}{1.5ex}
+%
+% Einzug am Absatzanfang auf 0 setzen.
+%
+\setlength{\parindent}{0em}
+\newcommand{\textcaption}[1]{\textit{#1}}
+%\typearea[0.5cm]{12}
+%
+% Titelseite
+%
+%\tntdasatitle{Diplom/Studienarbeit}
+%             {Titel}
+%             {Name des Studenten}
+%             {Betreuer}
+%             {Erstprüfer}
+%             {Zweitprüfer}
+%             {Ort,Datum}
+\newcommand{\tntdasatitle}[9]{
+\begin{titlepage}
+\enlargethispage{3cm}
+
+  \begin{center}
+    {\large \textsc{Gottfried Wilhelm Leibniz 
+    	    Universit\"at Hannover}}
+    
+    {\large \textsc{Institut f\"ur Informationsverarbeitung} }
+
+\vfill    
+
+    {\Large #1}
+
+\vspace{1cm}
+
+    {\Large \textbf{#2}}
+\vfill    
+
+    {\large #3} \\
+    \vspace{10pt}
+	{\small #4} \\
+	\vfill    
+
+
+{    \begin{tabular}{ll}
+      Betreuer: & #5 \\
+      Erstpr\"ufer: & #6 \\
+      Zweitpr\"ufer: & #7
+    \end{tabular}}
+
+\vspace{1cm}
+
+    { #8}
+
+\end{center}
+\setcounter{page}{0}
+\if@twoside 
+  \begin{titlepage} \ 
+  \setcounter{page}{0}
+  \end{titlepage} 
+\fi
+\end{titlepage}
+\begin{titlepage}
+\ 
+  \vfill
+  \vfill
+\vfill
+\vfill
+
+{\large Ich erkl\"are hiermit, dass ich die vorliegende Arbeit selbst\"andig
+angefertigt und keine anderen als die angegebenen Quellen und
+Hilfsmittel verwendet habe.
+\vfill
+#9}
+
+\setcounter{page}{0}
+\end{titlepage}
+\if@twoside 
+  \begin{titlepage} \ 
+  \setcounter{page}{0}
+  \end{titlepage} 
+\fi
+}
+%
+% Bilder einbinden
+%
+\renewcommand{\textfraction}{0.0}
+\renewcommand{\floatpagefraction}{.9}
+\renewcommand{\topfraction}{0.9}
+\renewcommand{\bottomfraction}{.5}
+
+%
+% LaTeX-Bilder einbinden
+%
+% \tntlatexpic{bild.tex}{LABEL}{Eintrag Inhaltsverzeichnis}{Bildunterschrift}
+%
+\newcommand{\tntlatexpic}[4]
+{
+  \begin{figure*}[ht]
+    \begin{center}
+      \input{#1}
+    \end{center}
+    \ifthenelse{\equal{#3}{}}
+               {\caption{{\label{#2}\textcaption{#3}}}}
+               {\caption[#3]{{\label{#2}\textcaption{#4}}}}
+  \end{figure*}
+}
+%
+% EPS/PDF-Bilder einbinden
+%
+% \tntpdfpic[Optionen]{bild.eps|pdf}{LABEL}{Eintrag Inhaltsverzeichnis}{Bildunterschrift}
+%
+\newcommand{\tntpic}[5][]
+{
+  \begin{figure*}[ht]
+    \begin{center}
+      \ifthenelse{\equal{#1}{}}
+                 {\includegraphics{#2}}
+                 {\includegraphics[#1]{#2}}
+    \end{center}
+    \ifthenelse{\equal{#4}{}}
+               {\caption{{\label{#3}\textcaption{#5}}}}
+               {\caption[#4]{{\label{#3}\textcaption{#5}}}}
+  \end{figure*}
+}
+%
+% EPS-Bilder einbinden
+%
+% \tntepspic[Optionen]{bild.eps}{LABEL}{Eintrag Inhaltsverzeichnis}{Bildunterschrift}
+%
+\newcommand{\tntepspic}[5][]
+{
+  \begin{figure*}[ht]
+    \begin{center}
+      \ifthenelse{\equal{#1}{}}
+                 {\includegraphics{#2}}
+                 {\includegraphics[#1]{#2}}
+    \end{center}
+    \ifthenelse{\equal{#4}{}}
+               {\caption{{\label{#3}\textcaption{#5}}}}
+               {\caption[#4]{{\label{#3}\textcaption{#5}}}}
+  \end{figure*}
+}
+%
+% EPS|PDF-Bilder einbinden (mit Rahmen)
+%
+% \tntfpic[Optionen]{bild.eps}{LABEL}{Eintrag Inhaltsverzeichnis}{Bildunterschrift}
+%
+\newcommand{\tntfpic}[5][]
+{
+  \begin{figure*}[ht]
+    \begin{center}
+      \fbox{%
+        \ifthenelse{\equal{#1}{}}
+                   {\includegraphics{#2}}
+                   {\includegraphics[#1]{#2}}%
+      }
+    \end{center}
+    \ifthenelse{\equal{#4}{}}
+               {\caption{{\label{#3}\textcaption{#5}}}}
+               {\caption[#4]{{\label{#3}\textcaption{#5}}}}
+  \end{figure*}
+}
+%
+% EPS-Bilder einbinden (mit Rahmen)
+%
+% \tntfepspic[Optionen]{bild.eps}{LABEL}{Eintrag Inhaltsverzeichnis}{Bildunterschrift}
+%
+\newcommand{\tntfepspic}[5][]
+{
+  \begin{figure*}[ht]
+    \begin{center}
+      \fbox{%
+        \ifthenelse{\equal{#1}{}}
+                   {\includegraphics{#2}}
+                   {\includegraphics[#1]{#2}}%
+      }
+    \end{center}
+    \ifthenelse{\equal{#4}{}}
+               {\caption{{\label{#3}\textcaption{#5}}}}
+               {\caption[#4]{{\label{#3}\textcaption{#5}}}}
+  \end{figure*}
+}
+%
+% Kommentare zur Literatur
+%
+\providecommand{\tntbibcomment}[1]{}
+%\tntbibitem[Label]{Schl\"ussel}{Autor(en)}{Titel}{Verlag}{Jahr}{Kommentar}
+\newcommand{\tntbibitem}[7][******]
+{
+\ifthenelse{\equal{#1}{******}}
+{\bibitem{#2}#3: #4. \\ #5, (#6).\\\tntbibcomment{#7}}
+{\bibitem[#1]{#2}#3: #4. \\ #5, (#6).\\\tntbibcomment{#7}}
+}
+
+% Umbruch
+\tolerance=2000
+\emergencystretch=20pt
+
+
+
+

@@ -1,0 +1,51 @@
+\chapter*{Abstract}
+\label{chap:Abstract}
+\addcontentsline{toc}{chapter}{Abstract}
+\setcounter{page}{1}
+\pagenumbering{roman}
+%******************************************************************************
+In this thesis, we propose a novel unsupervised learning framework for modeling activities and interactions, and recognizing high-level events in real-time captured surveillance video in complicated scenes with crowded motions.
+In our framework, three levels of events are connected by Hierarchical Dirichlet Process (HDP) model: the low-level visual features,  the simple ''atomic'' activities (middle-level events) and the interactions (high-level events). 
+More specifically, atomic activities are modeled as distributions over low-level visual features and the interactions are modeled as distributions over atomic activities. 
+%Our model is learned in a fully unsupervised way. 
+The procedure consists of two steps.
+Firstly, in a given a video sequence, local motions are clustered into different atomic activities and short video clips are clustered into different interactions.
+With the learning results, the high-level events are represented using hierarchical features instead of the traditional approaches which model a video event directly using low-level features. 
+Secondly, based on the modeling of activities and interactions, a training dataset is generated to exercise Gaussian Process (GP) classifier.
+Furthermore, the temporal dependencies between interactions learned by HDP-Hidden Markov Models (HMM) models are effectively integrated into our GP classifier.
+After the training process, our model recognizes high-level events and detects abnormal activities in newly online captured surveillance videos.
+
+To our best knowledge, our study is the first attempt to combine non-parametric generative HDP models and discriminant GP models for unsupervised online video events recognition and abnormalities detection in a complicated and crowded traffic scene. 
+Our framework couples the benefits of the generative HDP models with the discriminant GP models.
+%Our framework couples the benefits of the generative models of HDP which behave in a unsupervised way, with the discriminant models of GP which have higher classification accuracy.
+We validate the proposed model by applying it to the analysis of the three standard video datasets over crowded traffic scenes. Experimental results demonstrate that our framework is effective and efficient.
+
+%------------------------------------------------------------------------
+%-------------------------------------------------------------------------
+
+%******************************************************************************
+\chapter*{Kurzfassung}
+
+%------------------------------------------------------------------------
+%-------------------------------------------------------------------------
+
+%******************************************************************************
+\label{chap:Kurzfassung}
+\addcontentsline{toc}{chapter}{Kurzfassung}
+
+In dieser Arbeit wird eine neue Methode f"ur uner"uberwachtes Lernen vorgeschlagen, die die Aktivit"aten und Interaktionen in "Uberwachungsvideos, welche komplizierte Szenen  "uberf"ullten Bereichen mit Bewegunen aufgenommen haben, automatisch modelliert und in Echtzeit erkennt.
+Die Ereignisse werden auf drei vershiedenen Level mit dem Hierarchical Dirichlet Process (HDP) Modell verbunden: Das niedrigste Level sind visuelle Merkmarle, gefolgt von den einfachen ,,atomaren`` Aktivit"aten und schlie"slich den Interaktionen als h"ochstes Level.
+Die atomaren Aktivit"aten werden als Verteilung der visuellen Merkmarlen und die Interaktionen werden als Verteilung der atomaren Aktivit"aten modelliert.
+%zwischen mehrere Meschen oder Objekte werden modelliert als Verteilung der atomaren Aktivit"aten.
+Das Verfahren ist v"ollig uner"uberwacht und zusammengesetzt aus zwei Schritten. 
+Zuerst ertfrn, in der gegebenen Videofolge Bewegungspixel zu atomaren Aktivit"aten geclustert und dann werdern kurze Videoclips zu Interaktionen geclustert.
+Mit dem Ergibniss, dass eine Interaktion aus einer Mishung von gelernten atomaren Aktivit"aten dargestellt wird. Diese atomaren Aktivit"aten werden jeweils aus einer Mischung von visuellen Merkmarlen dargestellt.
+Dann wird ein Datensatz erzeugt, welcher f"ur das Training des Gaussian process (GP) Models zur Verf"ugung steht.
+Zus"atzlich werden die zeitlichen Zusammenh"angen zwischen Interaktionen von HDP-Hidden Markov Models (HMM) ermittelt. Diese Zusammenh"angen werden im GP Klassifikator wirksam eingef"ugt, um die Erkennungsgenauigkeit der Interaktionen zu verbessern.
+Nach diesem Lernverfahren kann das Modell Interaktionen identifizieren als auch abnormale Ereignisse im "Uberwachungsvideo in Echtzeit erkennen.
+
+
+Soweit bekannt ist, ist diese Methode die erste, welche das parameterfreie und generative -HDP-Model mit dem diskriminativen GP-Model kombiniert, um Interaktionen und abnormale Ereignisse in online "Uberwachungsvideo zu erkennen. Dabei wird diese Methode daf"ur verwendet, um komplizierte und gedr"angte Verhkerhsszenen zu er"uberwachen.
+Die Methode kuppelt die Gewinne vom generativen HDP-Model und discriminativen GP-Model aneinander.  
+%Die Methode kuppelt die Gewinne vom generativen HDP-Model, welches uner"uberwacht verf"ahrt, und discriminativen GP-Model, welches eine hohe Klassifikationsgenauigkeit besitzt, aneinander. 
+Diese Methode wurde auf Grundlage dreier ma"sgebender Verkehrs"uberwachungsvideos bewertet. Ergebnisse von Experimenten demonstrieren, dass unsere Methode wirksam und effizient ist.

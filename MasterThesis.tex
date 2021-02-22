@@ -1,0 +1,153 @@
+%\documentclass[pdftex,a4paper,12pt]{scrreprt}
+\documentclass[pdftex,a4paper,12pt]{scrreprt}
+\usepackage{ngerman}
+%\documentclass[pdftex,a4paper,12pt]{scrbook}
+\usepackage[latin1]{inputenc} 
+%\usepackage[utf8]{inputenc} 
+\usepackage[bibcomment]{tntdasa}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{subfigure}
+\usepackage{enumerate}
+\usepackage{pdflscape}
+\usepackage{booktabs}
+\usepackage{url}
+
+\usepackage{array}
+\usepackage{mathtools}
+\usepackage{makeidx}
+\usepackage{times}
+\usepackage{amssymb}
+\usepackage{amsmath}
+%\hyphenation{german}
+\usepackage{inputenc}
+
+\usepackage{epstopdf}
+\usepackage{mathrsfs}
+\usepackage{etoolbox}
+
+%\usepackage{hyperref}
+%\usepackage{acronym}
+
+\apptocmd{\thebibliography}{\csname phantomsection\endcsname\addcontentsline{toc}{chapter}{\bibname}}{}{}
+\usepackage{float}
+\usepackage{subfigure}
+\usepackage[numbers]{natbib}
+%\usepackage{slashbox} % make backslash in the table
+\usepackage{setspace}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{multirow}
+\usepackage{units}
+\usepackage{textcomp}
+\usepackage{bigfoot}
+\usepackage{pdflscape}
+%\usepackage{hyperref}
+%\hypersetup{
+%           colorlinks = true,
+%    linkcolor=black,        % color of internal links (change box color with linkbordercolor)
+%    citecolor=red,        % color of links to bibliography
+%    filecolor=magenta,      % color of file links
+%    urlcolor=cyan           % color of external links
+%}
+
+ \newlength{\subfigwidth}
+  \setkeys{Gin}{width=\subfigwidth}
+
+  \def\setcols#1{%
+    \setlength{\subfigwidth}{\linewidth}%
+    \addtolength{\subfigwidth}{\tabcolsep}
+    \addtolength{\subfigwidth}{-#1\tabcolsep}
+    \divide\subfigwidth by#1}
+%    
+\newcommand{\argmin}{\operatornamewithlimits{argmin}}
+\newcommand{\argmax}{\operatornamewithlimits{argmax}}   
+ 
+\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+\renewcommand{\algorithmicensure}{\textbf{Output:}}
+\renewcommand{\bibname}{Bibliography}
+
+\renewcommand{\contentsname}{Contents}
+\renewcommand{\listfigurename}{List of Figures}
+\renewcommand{\listtablename}{List of Tables}
+\renewcommand{\figurename}{Figure}
+\renewcommand{\tablename}{Table}
+
+
+\newcommand\DAGMreviewversion{
+  \usepackage{lineno}
+  \usepackage{color}
+  \renewcommand\thelinenumber{\color[rgb]{0.2,0.5,0.8}\normalfont\sffamily\scriptsize\arabic{linenumber}\color[rgb]{0,0,0}}
+  \renewcommand\makeLineNumber {\hss\thelinenumber\ \hspace{6mm} \rlap{\hskip\textwidth\ \hspace{6.5mm}\thelinenumber}} 
+  \linenumbers
+}
+%
+\pagestyle{tntdasa}
+
+\newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+
+%******************************************************************************
+\begin{document}
+%\frontmatter%
+\tntdasatitle{Masterarbeit}                % Diplom/Studienarbeit
+             {Gaussian Processes for Video Surveillance Activity Recognition}  % Titel der Arbeit
+             {Wentong Liao}    % Name des Studenten
+             {Matrikelnummer: 2906540}    % Name des Studenten
+             {Dr.-Ing. Michael Yang}    % Betreuer
+             {Prof. Dr.-Ing. Bodo Rosenhahn}% Erstprüfer
+             {Prof. Dr.-Ing. J"orn Ostermann}% Zweitprüfer
+             {Hannover, Mai 2015}         % Ort,Datum (Titelseite) 
+             {Hannover, den 18.05.2015}    % Ort,Datum (Erklärung)
+
+
+%******************************************************************************
+\setlength{\oddsidemargin}{1cm}
+\setlength{\evensidemargin}{-1cm}
+%******************************************************************************
+
+
+\include{sections/abstract}
+%*******************************************************************************************
+
+%*****************************************************************************************
+\tableofcontents
+
+\addcontentsline{toc}{chapter}{List of Tables}
+\listoftables
+
+\addcontentsline{toc}{chapter}{List of Figures}
+\listoffigures
+%\addtocontents{lof}{\bfseries\Large Figures\vskip10pt}
+%\caption[Short version for listoffigures]
+%****************************************************************************************
+
+\hypersetup{
+    colorlinks = true,
+    linkcolor=blue,          % color of internal links (change box color with linkbordercolor)
+    citecolor=red,        % color of links to bibliography
+    filecolor=magenta,      % color of file links
+    urlcolor=cyan           % color of external links
+}
+%========================================================================================
+
+
+\include{sections/introduction}
+\include{sections/related_work}
+\include{sections/background}
+\include{sections/framework}
+\include{sections/result}
+\include{sections/conclusions}
+
+%=========================================================================================
+\clearpage
+\newpage
+%******************************************************************************
+% Literaturverzeichnis
+%******************************************************************************
+
+\bibliographystyle{splncs}
+\bibliography{reference}
+\end{document}
+
