@@ -32,10 +32,13 @@ clean:
 		*.fls\
 		*.lot \
 		*.lof \
+		*.bbl \
+		__latexindent_temp.tex \
 		sections/*.aux \
 		sections/*.log \
-		__latexindent_temp.tex
+		sections/__latexindent_temp.tex 
+		
 
 
 depclean: clean
-	-@rm -rf $(TEX_OUT).pdf
+	-@rm -rf $(TEX_OUT).pdf $(TEX_IN).pdf 
