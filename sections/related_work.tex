@@ -1,6 +1,13 @@
 \chapter{Related Work}
 \label{chap:relatedwork}
-During the last decades, a large number of studies have focused on computer vision-based behavior analysis. Most existing approaches fall into two categories: object-centric tracking based and non object-centric statistical approaches. 
-In general, the models for activity recognition can be roughly divided into generative models such as HMM, which focuses on inferring the joint probability distribution, and discriminative models such as Gaussian Process models, which concentrates on modeling the conditional probability distribution.
-In this chapter, we first discuss about the existing approaches for activities recognition. Then, we compare the advantages and disadvantage between generative models and discriminative models for the application of activity recognition. The well-known existing models and their limitation are overlooked. 
-%At the end, we focus on the learning model because they are the center of our dissertation
+
+
+\section{Visual Relationship Detection}
+
+We follow three standard evaluation modes: (1) \textbf{predicate classification} (PREDCLS): given a ground truth set of boxes and labels, predict edge labels, (2) \textbf{scene graph classification} (SGCLS): given ground truth boxes, predict box labels and edge label and (3) \textbf{scene graph detection} (SGDET): predict boxes, box labels, and edge labels.
+
+\section{Transformer}
+
+\section{Context}
+Many methods have been proposed for modeling semantic context in object recognition [7]. Our approach is most closely related to work that models object co-occurrence using graphical models to combine many sources of contextual information [33, 11, 26, 10]. While our approach is a type of graphical model, it is unique in that it stages incorporation of context allowing for meaningful global context from large conditioning sets.\\
+Actions and relations have been a particularly fruitful source of context [30, 50], especially when combined with pose to create human-object interactions [48, 3]. Recent work has shown that object layouts can provide sufficient context for captioning COCO images [52, 28]; our work suggests the same for parsing Visual Genome scene graphs. Much of the context we derive could be interpreted as commonsense priors, which have commonly been extracted us- ing auxiliary means [59, 39, 5, 49, 55]. Yet for scene graphs, we are able to directly extract such knowledge.
