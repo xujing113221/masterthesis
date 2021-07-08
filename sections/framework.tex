@@ -7,21 +7,35 @@ In this chapter, we will introduce our proposed framework(see Figure~\ref{fig:my
 
 We are inspired by Encoder Self-Attention in DETR, and its output attention map can intuitively distinguish each object in the image(see Figure~\ref{fig:detrattentionmap}). Therefore, we envisage using multi-self attention to intuitively distinguish the relationship between objects in the image.
 
-\begin{figure}[!htbp]
-	\centering
-	\includegraphics[width=1\linewidth]{figures/detr_attention_map}
-	\caption[The attention map of the model DETR]{The attention map of the model DETR. The Encoder Self-Attention is able to separate individual instances, and it can be well visualized in the attention map. mage source from Carion et al.~\cite{carion2020end} page 11.}
-	\label{fig:detrattentionmap}
-\end{figure}
-
 \subsection{Idea of Pixel-based attention}
 
 We input the down-sampled image features into the Multihead Self-Attention module. According to the Equation~\ref{equ:self_attention}, we will get the attention weight between each pixel in the down-sampled image feature. Assuming that in Figure~\ref{fig:ideamethod1} we obtained the down-sampled image feature size of 512x66x50 through the backbone, that is, each layer od the feature has 3300 pixels, we convert it into a sequence of 3300x512, then input it into the Multihead Self-Attention module, and get an attention map size of 3300x3300 . We look for the pixel of the subject in the row of the attention map, and look for the pixel of the object in the column of the attention map ,to find the attention weight between the subject and object pixels. Eg. the ground truth pair $ \left\langle roof, building \right \rangle $ in Figure~\ref{fig:ideamethod1} is located in the attention map as shown in the lower right corner of Figure ~\ref{fig:ideamethod1}.
 
 We hope that through the training of our model, the attention weight of ground truth pairs can be higher than those of pairs without relation. In this way, we can use the attention weight in the evaluation to determine which pairs are most likely to be related.
 \begin{figure}[!htbp]
-	\centering
-	\includegraphics[width=0.9\linewidth]{figures/idea_method1}
+		\centering
+	\subfigure[No relation between \textit{roof} and \textit{tree}.]{
+		\begin{minipage}[t]{6cm}
+			\centering
+			\includegraphics[width=1\linewidth]{figures/roof/img1}
+	\end{minipage}}
+	\subfigure[The attention of $<roof, tree>$.]{
+		\begin{minipage}[t]{6cm}
+			\centering
+			\includegraphics[width=0.8\linewidth]{figures/roof/map1}
+	\end{minipage}}
+	
+	\subfigure[GT relation: \textit{roof on building}.]{
+		\begin{minipage}[t]{6cm}
+			\centering
+			\includegraphics[width=1\linewidth]{figures/roof/img2}
+	\end{minipage}}
+	\subfigure[The attention of $<roof,building>$]{
+		\begin{minipage}[t]{6cm}
+			\centering
+			\includegraphics[width=0.8\linewidth]{figures/roof/map2}
+	\end{minipage}}
+
 	\caption[An example of Pixel-based attention]{Relation pair on image and its position on attention map.}
 	\label{fig:ideamethod1}
 \end{figure}
@@ -32,7 +46,7 @@ The concrete realization of our idea is as follows: As shown in following Figure
 
 \begin{figure}[!htbp]
 	\centering
-	\includegraphics[width=1.1\linewidth]{figures/method1_baseline}
+	\includegraphics[width=1\linewidth]{figures/method1_baseline}
 	\caption[The baseline of the first method: Pixel-based attention]{The baseline of the  first method: Pixel-based attention}
 	\label{fig:method1baseline}
 \end{figure}
@@ -115,7 +129,7 @@ In the proposed framework the VGG16 as backbone is used to extract preliminary f
 \end{figure}
 
 
-Ours Encoder is a MultiHead Self-Attention module, whose input is an image sequence tensor plus a  Position Embedding tensor. Different from the processing of sequence signals by the RNN network, the Self-Attention module processes the sequence in parallel, so it does not know the order of the sequence, so we need to add position information to the original sequence, and we What is processing is two-dimensional image information, so we need to add two-dimensional position information for each pixel. We use Equ.~\ref{equ:position_embedding} to encode the position of the picture pixels.
+Ours Encoder is a MultiHead Self-Attention module, whose input is an image sequence tensor plus a  Position Embedding tensor. Different from the processing of sequence signals by the RNN network, the Self-Attention module processes the sequence in parallel, so it does not know the order of the sequence, we need to add position information to the original sequence.  we are processing two-dimensional image information, thus we need to add two-dimensional position information for each pixel. We use Equ.~\ref{equ:position_embedding} to encode the position of the picture pixels.
 
 
 \subsection{Object Decoder }
@@ -235,18 +249,20 @@ where $ i $ is the index of subject, $ j $ is the index of object,  $ feat_{obj}
  	\label{fig:predicateclassifer}
  \end{figure}
  
+ 
+ \begin{figure}[h]
+ 	\centering
+ 	\includegraphics[width=0.8\linewidth]{figures/attention_map}
+ 	\caption[Illustration of the attention map]{Each row in the attention weights map represents the attention of each object. }
+ 	\label{fig:attentionmap}
+ \end{figure}
+ 
 
 \subsection{Attention Loss}
 
 In the object decoder(see in Fig.~\ref{fig:objectdecoder}), we obtain the object visual feature through the second Multihead Attention module, and the attention maps size of $ [64, 1369] $. We can convert it to a tensor of $ [64, 37, 37], $ which means the attention weights of each object to each pixel in the image feature from the encoder.
 
 
-\begin{figure}[h!]
-	\centering
-	\includegraphics[width=1\linewidth]{figures/attention_map}
-	\caption[Illustration of the attention map]{Each row in the attention weights map represents the attention of each object. }
-	\label{fig:attentionmap}
-\end{figure}
 
 As shown in Fig.~\ref{fig:attentionmap}, we get an attention weights map of size 64x1369, and each row of it can be transformed into a small attention map of 37x37 size. We hope that this attention map can have a spatial correspondence with the entity in the picture. For example, in this picture we can see a man wearing a purple jacket and two buses. We hope to find the corresponding object in the small attention map, we will find green in the attention map of the jacket. The attention weight of the part is much higher than the blue one. This shows that we pay more attention to this green area when generating the object feature of the jacket. In this way, we can better visualize the object and make our object feature better.
 

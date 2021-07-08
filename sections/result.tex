@@ -136,7 +136,7 @@ This overlap is not a special case. We found that almost all images have this si
 			\label{fig:motor_all2}
 	\end{minipage}}
 	
-	\caption[The overlap in Attention map]{The overlap in Attention map.}
+	\caption[The overlap in Attention map]{The overlap in Attention map.The sub-figure (a) is the attention of all the related pairs, and the sub-figure (b) is the attention of all the irrelevant pairs. The sub-figure(c) shows that there is a serious overlap between them. We cannot increase the attention shown in (a) and decrease the attention of (b) through our attention loss.}
 	\label{fig:overlap}
 \end{figure}
 
@@ -149,7 +149,8 @@ As mentioned above, our Pixel Attention idea did not meet our expectations due t
 \subsection{Implementation details}
 We have implemented our model in $ pythorch\-0.4 $~\cite{paszke2019pytorch}. The input of our model is the same as~\cite{zellers2018neural} , that is an image with a size of $ 592 \times 592 $. We have used VGG16~\cite{simonyan2015deep} backbone pretrained on visual genome dataset. As mentioned in our Sec.~\ref{sec:retinanet}, the encoder and the two decoder modules accept input features of size 2048. We have used 3x Encoder, 3x Object Decoder , 3x Relation Decoder and 8 attention head for transformer network. The glove vector embedding has size 200. SGD with momentum along with learning rate of $ 10^{-3 }$ and our batch size is 6. Also, we have used cross-entropy loss for both of our object and relation classification loss.
 
-We have followed the same evaluation as in current benchmark of motifsNet~\cite{zellers2018neural} and computed and predicate classification (PREDCLS), scene graph classification (SGCLS) and scene graph generation(SSG).For the task SSG, we use a learnable object query, and use the Hungarian matching algorithm to match each object feature. For the other two tasks, we use our custom object query to obtain the object feature.
+We follow three standard evaluation modes same as in current benchmark of the Motifs-Net ~\cite{zellers2018neural}  : (1) \textbf{predicate classification} (PREDCLS): given a ground truth set of boxes and labels, predict relationship labels, (2) \textbf{scene graph classification} (SGCLS): given ground truth boxes, predict box labels and relationship label and (3) \textbf{scene graph detection} (SGDET): predict boxes, box labels, and relationship labels.
+For the subtask SGDET, we use a learnable object query, and use the Hungarian matching algorithm to match each object feature. For the other two subtasks, we use our custom object query to obtain the object feature.
 
 
 \subsection{Experiment on Object query}
@@ -172,7 +173,7 @@ We have already mentioned object query 1 above, it has the spatial information o
 	\label{fig:objquery2}
 \end{figure}
 
-\subsubsection{Correspondence of the Object Query }
+\subsubsection{Consistency of the Object Query }
 
 When people use a learnable embedding vector as the query, such as detr, they need to use the Hungarian matching algorithm to find the most matching object feature, because their query has no actual physical meaning. And our object query contains relevant information of each object, such as spatial information and semantic information. He is in one-to-one correspondence with the entities in the picture.
 
@@ -208,358 +209,219 @@ From the figure, we can see that we have generated three different queries throu
 
 \begin{figure}[h!]
 	\centering
-	\subfigure[]{
+	\subfigure[The objects with bounding boxes.]{
 		\begin{minipage}[t]{3.5cm}
 			\centering
 			\includegraphics[width=0.9\linewidth]{figures/result/tennis/obj2}
-	\end{minipage}}
-	\subfigure[]{
+	\end{minipage}
 		\begin{minipage}[t]{3.5cm}
 			\centering
 			\includegraphics[width=0.9\linewidth]{figures/result/tennis/obj4}
-	\end{minipage}}
-	\subfigure[]{
-		\begin{minipage}[t]{3.5cm}
-			\centering
-			\includegraphics[width=0.9\linewidth]{figures/result/tennis/obj5}
-	\end{minipage}}
-	\subfigure[]{
-		\begin{minipage}[t]{3.5cm}
-			\centering
-			\includegraphics[width=0.9\linewidth]{figures/result/tennis/obj6}
-	\end{minipage}}
-	
-	\subfigure[]{
-		\begin{minipage}[t]{3.5cm}
-			\centering
-			\includegraphics[width=0.9\linewidth]{figures/result/tennis/q0_2}
-	\end{minipage}}
-	\subfigure[]{
-		\begin{minipage}[t]{3.5cm}
-			\centering
-			\includegraphics[width=0.9\linewidth]{figures/result/tennis/q0_4}
-	\end{minipage}}
-	\subfigure[]{
-		\begin{minipage}[t]{3.5cm}
-			\centering
-			\includegraphics[width=0.9\linewidth]{figures/result/tennis/q0_5}
-	\end{minipage}}
-	\subfigure[]{
-		\begin{minipage}[t]{3.5cm}
-			\centering
-			\includegraphics[width=0.9\linewidth]{figures/result/tennis/q0_6}
-	\end{minipage}}
-
-		\subfigure[]{
-		\begin{minipage}[t]{3.5cm}
-			\centering
-			\includegraphics[width=0.9\linewidth]{figures/result/tennis/q3_2}
-	\end{minipage}}
-	\subfigure[]{
-		\begin{minipage}[t]{3.5cm}
-			\centering
-			\includegraphics[width=0.9\linewidth]{figures/result/tennis/q3_4}
-	\end{minipage}}
-	\subfigure[]{
-		\begin{minipage}[t]{3.5cm}
-			\centering
-			\includegraphics[width=0.9\linewidth]{figures/result/tennis/q3_5}
-	\end{minipage}}
-	\subfigure[]{
-		\begin{minipage}[t]{3.5cm}
-			\centering
-			\includegraphics[width=0.9\linewidth]{figures/result/tennis/q3_6}
-	\end{minipage}}
-
-	\subfigure[]{
-		\begin{minipage}[t]{3.5cm}
-			\centering
-			\includegraphics[width=0.9\linewidth]{figures/result/tennis/q2_2}
-	\end{minipage}}
-	\subfigure[]{
-		\begin{minipage}[t]{3.5cm}
-			\centering
-			\includegraphics[width=0.9\linewidth]{figures/result/tennis/q2_4}
-	\end{minipage}}
-	\subfigure[]{
-		\begin{minipage}[t]{3.5cm}
-			\centering
-			\includegraphics[width=0.9\linewidth]{figures/result/tennis/q2_5}
-	\end{minipage}}
-	\subfigure[]{
-		\begin{minipage}[t]{3.5cm}
-			\centering
-			\includegraphics[width=0.9\linewidth]{figures/result/tennis/q2_6}
-	\end{minipage}}
-	
-	\caption[An instance of Visualized results of the object query]{An instance of visualized results of the object query.from top to bottom, each row represents the position of the object, object query 1, object query 2 and object query 3.}
-	\label{fig:tennis}
-\end{figure}
-
-\begin{figure}[h!]
-	\centering
-	\subfigure[]{
-		\begin{minipage}[t]{3.5cm}
-			\centering
-			\includegraphics[width=0.9\linewidth]{figures/result/street/o1}
-	\end{minipage}}
-	\subfigure[]{
-		\begin{minipage}[t]{3.5cm}
-			\centering
-			\includegraphics[width=0.9\linewidth]{figures/result/street/o2}
-	\end{minipage}}
-	\subfigure[]{
-		\begin{minipage}[t]{3.5cm}
-			\centering
-			\includegraphics[width=0.9\linewidth]{figures/result/street/o3}
-	\end{minipage}}
-	\subfigure[]{
+	\end{minipage}
+	\begin{minipage}[t]{3.5cm}
+		\centering
+		\includegraphics[width=0.9\linewidth]{figures/result/street/o3}
+	\end{minipage}
 		\begin{minipage}[t]{3.5cm}
 			\centering
 			\includegraphics[width=0.9\linewidth]{figures/result/street/o4}
 	\end{minipage}}
 	
-	\subfigure[]{
+	\subfigure[The object query 1.]{
 		\begin{minipage}[t]{3.5cm}
 			\centering
-			\includegraphics[width=0.9\linewidth]{figures/result/street/q0_1}
-	\end{minipage}}
-	\subfigure[]{
+			\includegraphics[width=0.9\linewidth]{figures/result/tennis/q0_2}
+	\end{minipage}
 		\begin{minipage}[t]{3.5cm}
 			\centering
-			\includegraphics[width=0.9\linewidth]{figures/result/street/q0_2}
-	\end{minipage}}
-	\subfigure[]{
-		\begin{minipage}[t]{3.5cm}
-			\centering
-			\includegraphics[width=0.9\linewidth]{figures/result/street/q0_3}
-	\end{minipage}}
-	\subfigure[]{
+			\includegraphics[width=0.9\linewidth]{figures/result/tennis/q0_4}
+	\end{minipage}
+	\begin{minipage}[t]{3.5cm}
+		\centering
+		\includegraphics[width=0.9\linewidth]{figures/result/street/q0_3}
+	\end{minipage}
 		\begin{minipage}[t]{3.5cm}
 			\centering
 			\includegraphics[width=0.9\linewidth]{figures/result/street/q0_4}
 	\end{minipage}}
-	
-	\subfigure[]{
+
+
+		\subfigure[the object query 2.]{
 		\begin{minipage}[t]{3.5cm}
 			\centering
-			\includegraphics[width=0.9\linewidth]{figures/result/street/q3_1}
-	\end{minipage}}
-	\subfigure[]{
+			\includegraphics[width=0.9\linewidth]{figures/result/tennis/q3_2}
+	\end{minipage}
 		\begin{minipage}[t]{3.5cm}
 			\centering
-			\includegraphics[width=0.9\linewidth]{figures/result/street/q3_2}
-	\end{minipage}}
-	\subfigure[]{
+			\includegraphics[width=0.9\linewidth]{figures/result/tennis/q3_4}
+	\end{minipage}
 		\begin{minipage}[t]{3.5cm}
 			\centering
 			\includegraphics[width=0.9\linewidth]{figures/result/street/q3_3}
-	\end{minipage}}
-	\subfigure[]{
+	\end{minipage}
 		\begin{minipage}[t]{3.5cm}
 			\centering
 			\includegraphics[width=0.9\linewidth]{figures/result/street/q3_4}
 	\end{minipage}}
 
-	\subfigure[]{
+	\subfigure[The object query 3.]{
 		\begin{minipage}[t]{3.5cm}
 			\centering
-			\includegraphics[width=0.9\linewidth]{figures/result/street/q2_1}
-	\end{minipage}}
-	\subfigure[]{
+			\includegraphics[width=0.9\linewidth]{figures/result/tennis/q2_2}
+	\end{minipage}
 		\begin{minipage}[t]{3.5cm}
 			\centering
-			\includegraphics[width=0.9\linewidth]{figures/result/street/q2_2}
-	\end{minipage}}
-	\subfigure[]{
-		\begin{minipage}[t]{3.5cm}
-			\centering
-			\includegraphics[width=0.9\linewidth]{figures/result/street/q2_3}
-	\end{minipage}}
-	\subfigure[]{
-		\begin{minipage}[t]{3.5cm}
-			\centering
-			\includegraphics[width=0.9\linewidth]{figures/result/street/q2_4}
+			\includegraphics[width=0.9\linewidth]{figures/result/tennis/q2_4}
+	\end{minipage}
+	\begin{minipage}[t]{3.5cm}
+	\centering
+	\includegraphics[width=0.9\linewidth]{figures/result/street/q2_3}
+	\end{minipage}
+	\begin{minipage}[t]{3.5cm}
+	\centering
+	\includegraphics[width=0.9\linewidth]{figures/result/street/q2_4}
 	\end{minipage}}
 
-	
 	\caption[An instance of Visualized results of the object query]{An instance of visualized results of the object query.from top to bottom, each row represents the position of the object, object query 1, object query 2 and object query 3.}
-	\label{fig:street}
+	\label{fig:tennis}
 \end{figure}
 
 \subsubsection{Result of our object query}
-Next, we use our object query as the input of the object decoder to test the performance of these three queries in the task PredCLS, and we use recall@50 as the criterion.
+Next, we use our object query as the input of the object decoder to test the performance of these three queries in the task PredCLS, and we use recall@50 and recall@100 as the criterion.We can see the results in Table~\ref{tab:result_object _query}.
+
+\begin{table}[!h]
+	\centering
+	\begin{tabular}{c|ccc}
+		\hline
+		& object query 1 & object query 2 & object query 2 \\ \hline
+		Recall@50  & 62.9            & 63.2            & 63.0              \\
+		Recall@100 & 65.0             & 65.3              & 65.1              \\ \hline
+	\end{tabular}
+
+\caption[The result of object query in PredCLS]{The result of object query in PredCLS.}
+\label{tab:result_object _query}
+\end{table}
+
+According to the above table, the performance of the three object queries in PredCLS is similar. Based on the previous results, we draw the following conclusions:
+
+\begin{enumerate}
+	\item The object query and object feature we designed correspond to each other, which can replace learnable query and solve the VRD problem.
+	\item Different object query designs are not very helpful to the VRD problem. We only need to design a query that can distinguish each object, that is, each query needs to correspond to each entity one by one.
+\end{enumerate}
 
 
 \subsection{Experiment on Attention  Loss Function}
 
-\begin{figure}[tbph!]
+We designed an attention loss to make our object feature better. In this part, we designed some experiments to verify its effect.
+
+The Figure~\ref{fig:attention_loss_result} is the training result of our attention loss. We record a loss every 100 step, sum up 1000 data, and use matlab to perform low-pass filtering to draw the result. We found that our attention from the beginning $ 10^{-4} $ dropped rapidly and gradually tended to 0 in the process of about 500 steps.
+
+\begin{figure}[h!]
 	\centering
 	\includegraphics[width=0.9\linewidth]{figures/result/attention_loss}
 	\caption[Training result of the Attention Loss]{Training result of the Attention Loss.}
 	\label{fig:attention_loss_result}
 \end{figure}
 
+In the object decoder in our model in Fig.~\ref{fig:objectdecoder}, we will obtain the corresponding attention map when we get the object feature. Its size is $ 64\times1369 $, corresponding to each object, we draw it into a size of $ 37\times37 $ object attention map. As shown in Fig.~\ref{fig:train_attention_loss} and Fig.~\ref{fig:bus}.We selected the first and second image in our test data set, and drew the object bounding boxes and their attention maps (with and without attention loss).
+
+We can find that our attention has a very good effect on the attention map. Without attention loss, the attention map is messy. As shown in Fig.~\ref{fig:train_attention_loss}(b), we can clearly see the position and shape of the train, and even better express the position of the train than the bounding box. And the area in other parts of the picture is shown in blue, the background is very clean, highlighting the attention weight of our object, making our decoder pay more attention to this object.
 
 
-\begin{figure}[h!]
+\begin{table}[!h]
 	\centering
-	\subfigure[train]{
-		\begin{minipage}[t]{5cm}
-			\centering
-			\includegraphics[width=0.9\linewidth]{figures/result/train/obj1}
-	\end{minipage}}
-	\subfigure[attention map with loss]{
-		\begin{minipage}[t]{5cm}
-			\centering
-			\includegraphics[width=0.9\linewidth]{figures/result/train/att1}
-	\end{minipage}}
-	\subfigure[ attention map without loss]{
-		\begin{minipage}[t]{5cm}
-			\centering
-			\includegraphics[width=0.9\linewidth]{figures/result/train/no1}
-	\end{minipage}}
-	
-	\subfigure[haus]{
-		\begin{minipage}[t]{5cm}
-			\centering
-			\includegraphics[width=0.9\linewidth]{figures/result/train/obj2}
-			\label{fig:motor_man0}
-	\end{minipage}}
-	\subfigure[attention map with loss]{
-		\begin{minipage}[t]{5cm}
-			\centering
-			\includegraphics[width=0.9\linewidth]{figures/result/train/att2}
-			\label{fig:motor_map0}
-	\end{minipage}}
-	\subfigure[attention map without loss]{
-		\begin{minipage}[t]{5cm}
-			\centering
-			\includegraphics[width=0.9\linewidth]{figures/result/train/no2}
-			\label{fig:motor_man1}
-	\end{minipage}}
+	\begin{tabular}{c|ccc|ccc}
+		\bottomrule
+		\multirow{2}{*}{}           & \multicolumn{3}{c|}{PredCLS} & \multicolumn{3}{c}{SGCLS} \\ \cline{2-7} 
+		& R@20    & R@50    & R@100    & R@20   & R@50   & R@100   \\ \hline
+		without our attention  loss & 53.9      & 61.8       & 64.0       & 25.7     & 30.7     & 31.4   \\
+		with our attention loss     & 55.4       & 63.3       & 65.2        & 28.4      & 32.7      &33.6     \\ \bottomrule
+	\end{tabular}
 
-	\subfigure[man]{
-		\begin{minipage}[t]{5cm}
-			\centering
-			\includegraphics[width=0.9\linewidth]{figures/result/train/obj3}
-			\label{fig:motor_man0}
-	\end{minipage}}
-	\subfigure[attention map with loss]{
-		\begin{minipage}[t]{5cm}
-			\centering
-			\includegraphics[width=0.9\linewidth]{figures/result/train/att3}
-			\label{fig:motor_map0}
-	\end{minipage}}
-	\subfigure[attention map without loss]{
-		\begin{minipage}[t]{5cm}
-			\centering
-			\includegraphics[width=0.9\linewidth]{figures/result/train/no3}
-			\label{fig:motor_man1}
-	\end{minipage}}
+\caption[The result of attention loss in PredCLS and SGCLS]{The result of attention loss in PredCLS and SGCLS.}
+\label{tab:result_attetnion_loss}
+\end{table}
 
-	\subfigure[window]{
-		\begin{minipage}[t]{5cm}
-			\centering
-			\includegraphics[width=0.9\linewidth]{figures/result/train/obj4}
-			\label{fig:motor_man0}
-	\end{minipage}}
-	\subfigure[attention map with loss]{
-		\begin{minipage}[t]{5cm}
-			\centering
-			\includegraphics[width=0.9\linewidth]{figures/result/train/att4}
-			\label{fig:motor_map0}
-	\end{minipage}}
-	\subfigure[attention map without loss]{
-		\begin{minipage}[t]{5cm}
-			\centering
-			\includegraphics[width=0.9\linewidth]{figures/result/train/no4}
-			\label{fig:motor_man1}
-	\end{minipage}}
-	
-	\caption[The attention map of each pair.]{The attention map of each pair, where $ (a) $ is the ground truth pair and $ (d) $ is its corresponding position in the attention map. $ (b) $, $(c) $ are no relationship pair, and $ (e) $, $ (f) $ is theirs corresponding positions in the attention map.}
-	\label{fig:train_attention_loss}
-\end{figure}
+According to Table~\ref{tab:result_attetnion_loss}, we can know: our attention loss has got a better object feature. In predcls we have an improvement of about 0.1, and in sgcls our improvement is even greater by about 0.2.
 
+Based on the above results, we get the following conclusions:
+\begin{enumerate}
+	\item Our attention loss can effectively change the attention map so that it can be well visualized and can show the position and shape of each object.
+	\item Our attention loss can get a better object feature, so as to better solve the vrd problem.
+\end{enumerate}
 
+\subsection{Experiment on Relation Deocder}
+In this section, we conducted experiments on the relation decoder. We designed the relation query. Based on the results of the previous object query, we designed a different relation query, and made our relation context have the spatial information and semantic information of the object.
 
-\begin{figure}[h!]
+%In Figure~\ref{fig:relation_d_vis}, we can see that the relationship query we designed has differences between each relationship pair. For example, in the figure (a) represents pair $ <man, pants?>$ and (b) represents pair $ <pant, man> $, their subject and The objects are opposite, but their relations are different. In the figure (c) is relation pair $ <man1, glove> $ and d is $ <man1, man2> $. They have the same subject and different objects, but their relation queries are also significantly different.
+
+In Figure~\ref{fig:relation_attetnion}, We show our context effect through attention between relation and object. When we obtain the relation context through the relation decoder, we also obtain the attention map. Its y-axis represents the relation pair and its x-axis represents the object. We visualize it in the subgraph (c). Our relation pair contains both gt pair and no relation pair. For example, in the picture on the left, we can see that our gt pair $<glass, table> $ has higher attention weight for object \textit{`glass'} and \textit{`table'} than others, it means that this pair pays more attention to these two objects \textit{`glass'} and \textit{`table'}.We also have the same effect for no relation pair. For example, in the attention map on the right,the attention values of the object \textit{ `hair'} and \textit{`glove'} in the pair $<hair, glove> $   is higher than the object \textit{`girl'}.
+
+The Table~\ref{tab:result_relation_decoder} is the result of using the realtion decoder in the predcls task. We can know that our relation decoder is very helpful to solve the VRD problem, and the effect is remarkable.
+\begin{table}[!h]
 	\centering
-	\subfigure[bus]{
-		\begin{minipage}[t]{5cm}
-			\centering
-			\includegraphics[width=0.9\linewidth]{figures/result/bus/obj1}
-	\end{minipage}}
-	\subfigure[attention map with loss]{
-		\begin{minipage}[t]{5cm}
-			\centering
-			\includegraphics[width=0.9\linewidth]{figures/result/bus/att1}
-	\end{minipage}}
-	\subfigure[attention map without loss]{
-		\begin{minipage}[t]{5cm}
-			\centering
-			\includegraphics[width=0.9\linewidth]{figures/result/bus/no1}
-	\end{minipage}}
+	\begin{tabular}{c|ccc}
+		\bottomrule
+		& R@20    & R@50    & R@100      \\ \hline
+		without our relation decoder  loss & 51.1    &58.7      & 61.1    \\
+		with our relation decoder     & 55.4       & 63.3       & 65.2       \\ \bottomrule
+	\end{tabular}
 	
-	\subfigure[man]{
-		\begin{minipage}[t]{5cm}
-			\centering
-			\includegraphics[width=0.9\linewidth]{figures/result/bus/obj2}
-	\end{minipage}}
-	\subfigure[attention map with loss]{
-		\begin{minipage}[t]{5cm}
-			\centering
-			\includegraphics[width=0.9\linewidth]{figures/result/bus/att2}
-	\end{minipage}}
-	\subfigure[attention map without loss]{
-		\begin{minipage}[t]{5cm}
-			\centering
-			\includegraphics[width=0.9\linewidth]{figures/result/bus/no2}
-	\end{minipage}}
-	
-	\subfigure[pants]{
-		\begin{minipage}[t]{5cm}
-			\centering
-			\includegraphics[width=0.9\linewidth]{figures/result/bus/obj3}
-	\end{minipage}}
-	\subfigure[ attention map with loss]{
-		\begin{minipage}[t]{5cm}
-			\centering
-			\includegraphics[width=0.9\linewidth]{figures/result/bus/att3}
-	\end{minipage}}
-	\subfigure[ attention map without loss]{
-		\begin{minipage}[t]{5cm}
-			\centering
-			\includegraphics[width=0.9\linewidth]{figures/result/bus/no3}
-	\end{minipage}}
-	
-	\subfigure[board]{
-		\begin{minipage}[t]{5cm}
-			\centering
-			\includegraphics[width=0.9\linewidth]{figures/result/bus/obj4}
-	\end{minipage}}
-	\subfigure[ attention map with  loss]{
-		\begin{minipage}[t]{5cm}
-			\centering
-			\includegraphics[width=0.9\linewidth]{figures/result/bus/att4}
-	\end{minipage}}
-	\subfigure[ attention map without  loss]{
-		\begin{minipage}[t]{5cm}
-			\centering
-			\includegraphics[width=0.9\linewidth]{figures/result/bus/no4}
-	\end{minipage}}
-	
-	\caption[The attention map of each pair.]{The attention map of each pair, where $ (a) $ is the ground truth pair and $ (d) $ is its corresponding position in the attention map. $ (b) $, $(c) $ are no relationship pair, and $ (e) $, $ (f) $ is theirs corresponding positions in the attention map.}
-	\label{fig:bus}
-\end{figure}
+	\caption[The result of our relation decoder in PredCLS]{The result of our relation decoder in PredCLS.}
+	\label{tab:result_relation_decoder}
+\end{table}
+
+%\begin{figure}[h!]
+%	\centering
+%	\subfigure[]{
+%		\begin{minipage}[t]{3.5cm}
+%			\centering
+%			\includegraphics[width=0.9\linewidth]{figures/result/relation/r1}
+%	\end{minipage}}
+%	\subfigure[]{
+%		\begin{minipage}[t]{3.5cm}
+%			\centering
+%			\includegraphics[width=0.9\linewidth]{figures/result/relation/r2}
+%	\end{minipage}}
+%	\subfigure[]{
+%		\begin{minipage}[t]{3.5cm}
+%			\centering
+%			\includegraphics[width=0.9\linewidth]{figures/result/relation/r3}
+%	\end{minipage}}
+%	\subfigure[]{
+%		\begin{minipage}[t]{3.5cm}
+%			\centering
+%			\includegraphics[width=0.9\linewidth]{figures/result/relation/r4}
+%	\end{minipage}}
+%	
+%	\subfigure[]{
+%		\begin{minipage}[t]{3.5cm}
+%			\centering
+%			\includegraphics[width=0.9\linewidth]{figures/result/relation/q1}
+%	\end{minipage}}
+%	\subfigure[]{
+%		\begin{minipage}[t]{3.5cm}
+%			\centering
+%			\includegraphics[width=0.9\linewidth]{figures/result/relation/q2}
+%	\end{minipage}}
+%	\subfigure[]{
+%		\begin{minipage}[t]{3.5cm}
+%			\centering
+%			\includegraphics[width=0.9\linewidth]{figures/result/relation/q3}
+%	\end{minipage}}
+%	\subfigure[]{
+%		\begin{minipage}[t]{3.5cm}
+%			\centering
+%			\includegraphics[width=0.9\linewidth]{figures/result/relation/q4}
+%	\end{minipage}}
+%	
+%	\caption[An instance of Visualized results of the relation query]{An instance of visualized results of the object query.from top to bottom, each row represents the position of the object, object query 1, object query 2 and object query 3.}
+%	\label{fig:relation_d_vis}
+%\end{figure}
 
 
-
-
-
-
-
-\subsection{result}
+\subsection{Results Comparison}
+In this section we provide the performance of some advanced related works for comparison in Tab.~\ref{tab:compare_recall}.
 
 \begin{table}[!h]
 	\centering
@@ -575,11 +437,289 @@ Next, we use our object query as the input of the object decoder to test the per
 		MotifNet~\cite{zellers2018neural}                & 58.5                 & 65.2                 & 67.1                  & 32.9                 & 35.8                 & 36.5                  & 21.4                 & 27.2                 & 30.3                  \\
 		KERN~\cite{chen2019knowledge}                   & -                    & 65.8                 & 67.6                  & -                    & 36.7                 & 37.4                  & -                    & 27.1                 & 29.8                  \\
 		RelDN~\cite{zhang2019graphical}                   & 66.9                 & 68.4                 & 68.4                  & 36.1                 & 36.8                 & 36.8                  & 21.1                 & 28.3                 & 32.7                  \\
-		Ours                    & 1                    & 1                    & 1                     & 1                    & 1                    & 1                     & 1                    & 1                    & 1                     \\ \hline
+		Ours                   & 55.4       & 63.3       & 65.2        & 29.4      & 33.7      &34.6              & 20.2                    & 26.3                    & 29.6                     \\ \hline
 	\end{tabular}}
 
-\caption[Comparison with some advanced related works.]{Comparison with some advanced related works. The results of MSDN[21], ASSOC EMBED[34] are obtained from MotifNet[1]. The authors of [1] use their object detector to reimplement for fair comparison. SGRN[20] and our approach also adopt the object detector from [1].}
+\caption[Comparison with some advanced related works.]{Comparison with some advanced related works.}
 \label{tab:compare_recall}
 \end{table}
 
+From the above table, we can see that although our model does not reach State of the Arts, it can complete the VRD problem well. Note that the evaluation method of RelDN is different from ours, which causes its Recall@20 to be higher than actual.
+
 \subsection{Visible Results}
+In this section, we provide some visible experiment results of our model. There are three instances for respectively PredCLS, SGCLS and SGDET. The results are generated by the model illustrated in Fig.~\ref{fig:my_model}.
+
+In Fig.~\ref{fig:predcls} we present an visible experiment result of PredCLS. We give an image from the VG test set with complex scene information (bounding boxes and classes of each object) to our  model to predicts the interactions between the objects in the image. For this single image, it has 5 relationships in the ground truth and our model predicts 3 relationship correctly. The wrong-predicted relationships are $ <window\ on\ bike >$ and $<seat\ on\ bike>$ and $<bike\ has\ seat>$. The possible reasons are: predicates such as \textit{`on' }and \textit{`has' } are the majority in our data set, so our model predicts them into these. But usually the result is not wrong, it's just not in the ground truth.
+
+In Fig.~\ref{fig:sgcls}  we present an visible experiment result of SGCLS. We give an image from the VG test set with scene information(only bounding boxes) to our  model to classifies the object classes and predicts the interactions between the objects in the image. For this single image it has 3 relationships in the ground truth and one relationship are predicted correctly by our model, the recall@50 is 33.3\%. The reason for the low recall of this picture is that we did not predict \textit{`building'} and \textit{`coat'}. The score of \textit{`building'} is only 0.72\% and the score of \textit{`coat'} is only 3.4\%. In subfigure (a), we can see that the bounding box of \textit{`women'} completely occludes the bounding box of \textit{`building'}, and they almost overlap, so it is difficult for our model to accurately classify the \textit{`building'}correctly.Similarly,
+The \textit{`coat'} is also blocked a lot by other objects.
+ 
+In Fig.~\ref{fig:sgdet}  we present an visible experiment result of SGDET. We give only an image from the VG test set without other scene information to our model. The model need to detect the position and class of the bounding boxes for each object and predict the interactions between them. For this single image, we predicted one relationship correctly, and there are 3 ground true relationships. Our recall@50 is 33.3\%.  In subfigure (c), we can find some reasons for low recall. For example, the bounding box of \textit{`lamp' }we detected is much smaller than the ground truth, and the IoU between them is 0.23, which will not be detected. On the contrary, the \textit{`screen' }we detected matches the actual picture. Although we got the seemingly correct relationship of $ <scree\ on \ desk> $, it is not in our ground truth.
+
+\begin{figure}[h!]
+	\centering
+	\subfigure[Scenes graph with bounding boxes and class labels]{
+		\begin{minipage}[t]{8cm}
+			\centering
+			\includegraphics[width=0.95\linewidth]{figures/result/sgdet/img}
+	\end{minipage}}
+	\subfigure[Grund truth realtion.]{
+		\begin{minipage}[t]{6cm}
+			\centering
+			\includegraphics[width=1\linewidth]{figures/result/sgdet/gt}
+	\end{minipage}}
+	
+	\subfigure[Scenes graph with dectected boxes and class labels.]{
+		\begin{minipage}[t]{8cm}
+			\centering
+			\includegraphics[width=0.95\linewidth]{figures/result/sgdet/img1}
+	\end{minipage}}
+	\subfigure[The result of Recall@50.]{
+		\begin{minipage}[t]{6cm}
+			\centering
+			\includegraphics[width=0.9\linewidth]{figures/result/sgdet/rec}
+	\end{minipage}}
+	
+	
+	\caption[An instance of SGDET.]{An instance of SGDET.}
+	\label{fig:sgdet}
+\end{figure}
+
+\begin{figure}[h!]
+	\centering
+	\subfigure[Scenes graph with bounding boxes and class labels]{
+		\begin{minipage}[t]{10cm}
+			\centering
+			\includegraphics[width=0.8\linewidth]{figures/result/predcls/img}
+		\end{minipage}}
+	\subfigure[The grund truth realtion.]{
+		\begin{minipage}[t]{7cm}
+			\centering
+			\includegraphics[width=0.8\linewidth]{figures/result/predcls/gt}
+		\end{minipage}}
+	\subfigure[The result of Recall@50.]{
+		\begin{minipage}[t]{7cm}
+			\centering
+			\includegraphics[width=0.8\linewidth]{figures/result/predcls/rec}
+	\end{minipage}}
+	
+	\caption[An instance of PredCLS]{An instance of PredCLS.}
+	\label{fig:predcls}
+\end{figure}
+
+\begin{figure}[h!]
+	\centering
+	\subfigure[Scenes graph with bounding boxes and class labels]{
+		\begin{minipage}[t]{6cm}
+			\centering
+			\includegraphics[width=1\linewidth]{figures/result/sgcls/img}
+	\end{minipage}}
+	\subfigure[Grund truth realtion.]{
+		\begin{minipage}[t]{4.5cm}
+			\centering
+			\includegraphics[width=1\linewidth]{figures/result/sgcls/gt}
+	\end{minipage}}
+	\subfigure[The result of Recall@50.]{
+		\begin{minipage}[t]{4.55cm}
+			\centering
+			\includegraphics[width=0.3\linewidth]{figures/result/sgcls/rec}
+	\end{minipage}}
+	
+	
+	\caption[An instance of SGCLS]{An instance of SGCLS.}
+	\label{fig:sgcls}
+\end{figure}
+
+
+\begin{figure}[h!]
+	\centering
+	\subfigure[Scenes with objects and bounding boxes with class labels]{
+		\begin{minipage}[t]{6cm}
+			\centering
+			\includegraphics[width=0.9\linewidth]{figures/result/relation_Attention/img1}
+		\end{minipage}
+		\begin{minipage}[t]{6cm}
+			\centering
+			\includegraphics[width=0.86\linewidth]{figures/result/relation_Attention/img2}
+	\end{minipage}}
+	
+	\subfigure[Grund truth realtion.]{
+		\begin{minipage}[t]{6cm}
+			\centering
+			\includegraphics[width=1\linewidth]{figures/result/relation_Attention/rel1}
+		\end{minipage}
+		\begin{minipage}[t]{6cm}
+			\centering
+			\includegraphics[width=0.4\linewidth]{figures/result/relation_Attention/rel2}
+	\end{minipage}}
+	
+	\subfigure[The attention between relations and objects in the Realtion Decoder.]{
+		\begin{minipage}[t]{7cm}
+			\centering
+			\includegraphics[width=0.86\linewidth]{figures/result/relation_Attention/att1}
+		\end{minipage}
+		
+		\begin{minipage}[t]{7cm}
+			\centering
+			\includegraphics[width=1\linewidth]{figures/result/relation_Attention/att2}
+	\end{minipage}}
+	
+	\caption[The visualized results of the relation decoder attention.]{The visualized results of the relation decoder attention. We get the attention map from the second attention module of the relation decoder, it means which objects the relation pair pays more attention to, and the corresponding  attention weight will be higher in this map.}
+	\label{fig:relation_attetnion}
+\end{figure}
+
+
+\begin{figure}[h!]
+	\centering
+	\subfigure[train]{
+		\begin{minipage}[t]{5cm}
+			\centering
+			\includegraphics[width=0.9\linewidth]{figures/result/train/obj1}
+	\end{minipage}}
+	\subfigure[attention map with our loss]{
+		\begin{minipage}[t]{5cm}
+			\centering
+			\includegraphics[width=0.9\linewidth]{figures/result/train/att1}
+	\end{minipage}}
+	\subfigure[ attention map without our loss]{
+		\begin{minipage}[t]{5cm}
+			\centering
+			\includegraphics[width=0.9\linewidth]{figures/result/train/no1}
+	\end{minipage}}
+	
+	\subfigure[haus]{
+		\begin{minipage}[t]{5cm}
+			\centering
+			\includegraphics[width=0.9\linewidth]{figures/result/train/obj2}
+			\label{fig:motor_man0}
+	\end{minipage}}
+	\subfigure[attention map with our loss]{
+		\begin{minipage}[t]{5cm}
+			\centering
+			\includegraphics[width=0.9\linewidth]{figures/result/train/att2}
+			\label{fig:motor_map0}
+	\end{minipage}}
+	\subfigure[attention map without our loss]{
+		\begin{minipage}[t]{5cm}
+			\centering
+			\includegraphics[width=0.9\linewidth]{figures/result/train/no2}
+			\label{fig:motor_man1}
+	\end{minipage}}
+	
+	\subfigure[man]{
+		\begin{minipage}[t]{5cm}
+			\centering
+			\includegraphics[width=0.9\linewidth]{figures/result/train/obj3}
+			\label{fig:motor_man0}
+	\end{minipage}}
+	\subfigure[attention map with our loss]{
+		\begin{minipage}[t]{5cm}
+			\centering
+			\includegraphics[width=0.9\linewidth]{figures/result/train/att3}
+			\label{fig:motor_map0}
+	\end{minipage}}
+	\subfigure[attention map without our loss]{
+		\begin{minipage}[t]{5cm}
+			\centering
+			\includegraphics[width=0.9\linewidth]{figures/result/train/no3}
+			\label{fig:motor_man1}
+	\end{minipage}}
+	
+	\subfigure[window]{
+		\begin{minipage}[t]{5cm}
+			\centering
+			\includegraphics[width=0.9\linewidth]{figures/result/train/obj4}
+			\label{fig:motor_man0}
+	\end{minipage}}
+	\subfigure[attention map with our  loss]{
+		\begin{minipage}[t]{5cm}
+			\centering
+			\includegraphics[width=0.9\linewidth]{figures/result/train/att4}
+			\label{fig:motor_map0}
+	\end{minipage}}
+	\subfigure[attention map without our loss]{
+		\begin{minipage}[t]{5cm}
+			\centering
+			\includegraphics[width=0.9\linewidth]{figures/result/train/no4}
+			\label{fig:motor_man1}
+	\end{minipage}}
+	
+	\caption[The visualization of our attention loss of the first image in the test dataset]{The visualization of our attention loss of the first image in the test dataset.The first column is the object bounding box, the second column is the visualization result of the attention map when we use the attention loss, and the third column is the visualization result of the attention map without our attention loss.}
+	\label{fig:train_attention_loss}
+\end{figure}
+
+
+
+
+\begin{figure}[h!]
+	\centering
+	\subfigure[bus]{
+		\begin{minipage}[t]{5cm}
+			\centering
+			\includegraphics[width=0.9\linewidth]{figures/result/bus/obj1}
+	\end{minipage}}
+	\subfigure[attention map with our loss]{
+		\begin{minipage}[t]{5cm}
+			\centering
+			\includegraphics[width=0.9\linewidth]{figures/result/bus/att1}
+	\end{minipage}}
+	\subfigure[attention map without our loss]{
+		\begin{minipage}[t]{5cm}
+			\centering
+			\includegraphics[width=0.9\linewidth]{figures/result/bus/no1}
+	\end{minipage}}
+	
+	\subfigure[man]{
+		\begin{minipage}[t]{5cm}
+			\centering
+			\includegraphics[width=0.9\linewidth]{figures/result/bus/obj2}
+	\end{minipage}}
+	\subfigure[attention map with our loss]{
+		\begin{minipage}[t]{5cm}
+			\centering
+			\includegraphics[width=0.9\linewidth]{figures/result/bus/att2}
+	\end{minipage}}
+	\subfigure[attention map without our loss]{
+		\begin{minipage}[t]{5cm}
+			\centering
+			\includegraphics[width=0.9\linewidth]{figures/result/bus/no2}
+	\end{minipage}}
+	
+	\subfigure[pants]{
+		\begin{minipage}[t]{5cm}
+			\centering
+			\includegraphics[width=0.9\linewidth]{figures/result/bus/obj3}
+	\end{minipage}}
+	\subfigure[ attention map with our loss]{
+		\begin{minipage}[t]{5cm}
+			\centering
+			\includegraphics[width=0.9\linewidth]{figures/result/bus/att3}
+	\end{minipage}}
+	\subfigure[ attention map without our loss]{
+		\begin{minipage}[t]{5cm}
+			\centering
+			\includegraphics[width=0.9\linewidth]{figures/result/bus/no3}
+	\end{minipage}}
+	
+	\subfigure[board]{
+		\begin{minipage}[t]{5cm}
+			\centering
+			\includegraphics[width=0.9\linewidth]{figures/result/bus/obj4}
+	\end{minipage}}
+	\subfigure[ attention map with our loss]{
+		\begin{minipage}[t]{5cm}
+			\centering
+			\includegraphics[width=0.9\linewidth]{figures/result/bus/att4}
+	\end{minipage}}
+	\subfigure[ attention map without our loss]{
+		\begin{minipage}[t]{5cm}
+			\centering
+			\includegraphics[width=0.9\linewidth]{figures/result/bus/no4}
+	\end{minipage}}
+	
+	\caption[The visualization of our attention loss of the second image in the test dataset]{The visualization of our attention loss of the second image in the test dataset.The first column is the object bounding box, the second column is the visualization result of the attention map when we use the attention loss, and the third column is the visualization result of the attention map without our attention loss.}
+	\label{fig:bus}
+\end{figure}
+
+
+
