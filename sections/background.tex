@@ -106,7 +106,61 @@ The following are the key steps of Faster RCNN:
 	\item \textbf{Classification}. Use proposal feature maps to calculate the category of the proposal, and again bounding box regression to obtain the final precise position of the bounding box.
 \end{itemize}
 
-\section{Detr: End-to-End Object Detection with Transformers}
+\subsection{VGG16}
+
+VGG16 is a convolutional neural network model proposed by K. Simonyan and A. Zisserman from the University of Oxford in the paper ``Very Deep Convolutional Networks for Large-Scale Image Recognition''~\cite{simonyan2015deep}. The model achieves 92.7\% top-5 test accuracy in ImageNet~\cite{ILSVRC15}, which is a dataset of over 14 million images belonging to 1000 classes.
+
+The structure of VGG16 is shown in Fig.~\ref{fig:vgg16}.The input to cov1 layer is of fixed size 224 x 224 RGB image. The image is passed through a stack of convolutional (conv.) layers, where the filters were used with a very small receptive field: 3x3 (which is the smallest size to capture the notion of left/right, up/down, center). In one of the configurations, it also utilizes 1x1 convolution filters, which can be seen as a linear transformation of the input channels (followed by non-linearity). The convolution stride is fixed to 1 pixel; the spatial padding of conv. layer input is such that the spatial resolution is preserved after convolution, i.e. the padding is 1-pixel for 3x3 conv. layers. Spatial pooling is carried out by five max-pooling layers, which follow some of the conv.  layers (not all the conv. layers are followed by max-pooling). Max-pooling is performed over a 2x2 pixel window, with stride 2.
+
+Three Fully-Connected (FC) layers follow a stack of convolutional layers (which has a different depth in different architectures): the first two have 4096 channels each, the third performs 1000-way ILSVRC classification and thus contains 1000 channels (one for each class). The final layer is the soft-max layer. The configuration of the fully connected layers is the same in all networks.
+
+All hidden layers are equipped with the rectification (ReLU) non-linearity. It is also noted that none of the networks (except for one) contain Local Response Normalisation (LRN), such normalization does not improve the performance on the ILSVRC dataset, but leads to increased memory consumption and computation time.
+
+
+\begin{figure}[!htbp]
+	\centering
+	\includegraphics[width=0.8\linewidth]{figures/vgg16}
+	\caption[The Architecture of VGG-16]{The Architecture of VGG-16.}
+	\label{fig:vgg16}
+\end{figure}
+
+The advantages of VGG:
+\begin{itemize}
+	\item The structure of VGGNet is very simple, the entire network uses the same size of the convolution kernel size (3x3) and maximum pooling size (2x2).
+	\item The combination of several small filter (3x3) convolutional layers is better than a large filter (5x5 or 7x7) convolutional layer.
+	\item It is verified that performance can be improved by continuously deepening the network structure.
+\end{itemize}
+
+The disadvantages of VGG:
+
+\begin{itemize}
+	\item VGG consumes more computing resources and uses more parameters, resulting in more memory usage. Most of the parameters are from the first fully connected layer. VGG has 3 fully connected layers!
+\end{itemize}
+
+
+
+\label{sec:roialign}
+\subsection{ROI Align}
+ROI Align is a regional feature aggregation method proposed in the Mask-RCNN~\cite{he2018mask} paper, which solves the problem of regional mis-alignment caused by two quantizations in the ROI Pooling operation. Experiments show that replacing ROI Pooling with ROI Align in the detection task can improve the accuracy of the detection model.
+
+\begin{figure}[!htbp]
+	\centering
+	\includegraphics[width=1\linewidth]{figures/roi_align}
+	\caption[Bilinear interpolation for ROI Align]{Bilinear interpolation for ROI Align.}
+	\label{fig:roialign}
+\end{figure}
+
+ROI Align does not need to perform rounding operations like ROI pooling. If the decimal number is calculated, that is, it does not fall on the real pixel, then use the nearest pixel to perform bilinear interpolation on this virtual pixel to get this `pixel'  value.The step are processed as follow:
+
+\begin{enumerate}[1.]
+	\item Divide the bbox area into equal parts according to the size required by the output. It is likely that the vertices will not fall on the real pixels after the equal division.
+	\item If the vertices do not fall on the real pixel points after equal division, then take a fixed 4 points in each bin, which is the blue point on the right side of Figure~\ref{fig:roialign}.
+	\item For each blue point, the value of the 4 nearest real pixel points is weighted (bilinear interpolation) to obtain the value of this blue point
+	\item  4 new values are calculated in a bin, and max is selected from these new values as the output value of this bin Therefore we use bilinear interpolation to predict its value.
+	\item Get the final 2x2 output.
+\end{enumerate}
+
+\section{End-to-End Object Detection with Transformers}
 The Detr discards the traditional Faster R-CNN ROI-based object detection method, and uses Transformer and its proposed bipartite matching to achieve position-independent and unique bounding box for each object, thus eliminating the need for Anchor and NMS. With a very simple architecture, it achieves an accuracy comparable to or even surpassing Faster R-CNN. While being able to do object detection, the model also has better migration capabilities. In the original paper, the panoramic segmentation was achieved through the Transformer's Attention mechanism. 
 
 \begin{figure}[!htbp]
@@ -202,58 +256,8 @@ As shown in Figure ~\ref{fig:detrattentionmap}, we can clearly see what detr pay
 	\label{fig:detrattentionmap}
 \end{figure}
 
-\section{VGG16}
-
-VGG16 is a convolutional neural network model proposed by K. Simonyan and A. Zisserman from the University of Oxford in the paper ``Very Deep Convolutional Networks for Large-Scale Image Recognition''~\cite{simonyan2015deep}. The model achieves 92.7\% top-5 test accuracy in ImageNet~\cite{ILSVRC15}, which is a dataset of over 14 million images belonging to 1000 classes.
-
-The structure of VGG16 is shown in Fig.~\ref{fig:vgg16}.The input to cov1 layer is of fixed size 224 x 224 RGB image. The image is passed through a stack of convolutional (conv.) layers, where the filters were used with a very small receptive field: 3x3 (which is the smallest size to capture the notion of left/right, up/down, center). In one of the configurations, it also utilizes 1x1 convolution filters, which can be seen as a linear transformation of the input channels (followed by non-linearity). The convolution stride is fixed to 1 pixel; the spatial padding of conv. layer input is such that the spatial resolution is preserved after convolution, i.e. the padding is 1-pixel for 3x3 conv. layers. Spatial pooling is carried out by five max-pooling layers, which follow some of the conv.  layers (not all the conv. layers are followed by max-pooling). Max-pooling is performed over a 2x2 pixel window, with stride 2.
-
-Three Fully-Connected (FC) layers follow a stack of convolutional layers (which has a different depth in different architectures): the first two have 4096 channels each, the third performs 1000-way ILSVRC classification and thus contains 1000 channels (one for each class). The final layer is the soft-max layer. The configuration of the fully connected layers is the same in all networks.
-
-All hidden layers are equipped with the rectification (ReLU) non-linearity. It is also noted that none of the networks (except for one) contain Local Response Normalisation (LRN), such normalization does not improve the performance on the ILSVRC dataset, but leads to increased memory consumption and computation time.
 
 
-\begin{figure}[!htbp]
-	\centering
-	\includegraphics[width=0.8\linewidth]{figures/vgg16}
-	\caption[The Architecture of VGG-16]{The Architecture of VGG-16.}
-	\label{fig:vgg16}
-\end{figure}
-
-The advantages of VGG:
-\begin{itemize}
-	\item The structure of VGGNet is very simple, the entire network uses the same size of the convolution kernel size (3x3) and maximum pooling size (2x2).
-	\item The combination of several small filter (3x3) convolutional layers is better than a large filter (5x5 or 7x7) convolutional layer.
-	\item It is verified that performance can be improved by continuously deepening the network structure.
-\end{itemize}
-
-The disadvantages of VGG:
-
-\begin{itemize}
-	\item VGG consumes more computing resources and uses more parameters, resulting in more memory usage. Most of the parameters are from the first fully connected layer. VGG has 3 fully connected layers!
-\end{itemize}
-
-
-\label{sec:roialign}
-\section{ROI Align}
-ROI Align is a regional feature aggregation method proposed in the Mask-RCNN~\cite{he2018mask} paper, which solves the problem of regional mis-alignment caused by two quantizations in the ROI Pooling operation. Experiments show that replacing ROI Pooling with ROI Align in the detection task can improve the accuracy of the detection model.
-
-\begin{figure}[!htbp]
-	\centering
-	\includegraphics[width=1\linewidth]{figures/roi_align}
-	\caption[Bilinear interpolation for ROI Align]{Bilinear interpolation for ROI Align.}
-	\label{fig:roialign}
-\end{figure}
-
-ROI Align does not need to perform rounding operations like ROI pooling. If the decimal number is calculated, that is, it does not fall on the real pixel, then use the nearest pixel to perform bilinear interpolation on this virtual pixel to get this `pixel'  value.The step are processed as follow:
-
-\begin{enumerate}[1.]
-	\item Divide the bbox area into equal parts according to the size required by the output. It is likely that the vertices will not fall on the real pixels after the equal division.
-	\item If the vertices do not fall on the real pixel points after equal division, then take a fixed 4 points in each bin, which is the blue point on the right side of Figure~\ref{fig:roialign}.
-	\item For each blue point, the value of the 4 nearest real pixel points is weighted (bilinear interpolation) to obtain the value of this blue point
-	\item  4 new values are calculated in a bin, and max is selected from these new values as the output value of this bin Therefore we use bilinear interpolation to predict its value.
-	\item Get the final 2x2 output.
-\end{enumerate}
 
 \section{Ranking Loss}
 
