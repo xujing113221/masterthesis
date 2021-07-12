@@ -38,7 +38,7 @@ The motivaton for our task are mainly summarized as follows:
 
 \begin{enumerate}[\qquad 1.]
 	\item DETR has been proven to achieve good results in object detection with the use of Transformer. Since the object detection problems are solved well, we focus on finding a solution for relation detection through the transformer structure.
-	\item When solving VRD's subtasks SGCLS and PREDCLS, we have the bounding boxes of the object and even the labels. In target detection, DETR uses a fixed learnable query to obtain a set of object features, and then matches the most likely object through a bipartite matching algorithm. But this learnable query is not suitable for the two subtasks we mentioned. It has no specific physical meaning, no correspondence with the real object and it cannot use the existing known information. Therefore, we hope to design an object query that combines known information to achieve a one-to-one correspondence with objects.
+	\item When solving VRD's subtasks SGCLS and PREDCLS, we have the bounding boxes of the object and even the labels. In target detection, DETR uses a fixed learnable query to obtain a set of object features, and then matches the most likely object through a bipartite matching algorithm. But this learnable query is not suitable for the two subtasks we mentioned. It has no specific physical meaning, no correspondence with the real object and it cannot use the existing known information. Therefore, an object query is expected to designed that combines known information to achieve a one-to-one correspondence with objects.
 	\item Attention mechanism is the fundamental principle of transformer, and we hope to obtain some information that is conducive to solving VRD problems by studying it. For example, through the attention between objects to explore whether they have a relationship, or through the study of the attention between relationship and object, to understand which two objects the relationship pays more attention to.
 	\item The most important challenge is to predict the correct predicate, that describes the relation between two objects. To realise our goals, we designed a relation decoder, which helps to exploit semantic and spatial co-relation among various objects.
 \end{enumerate}
@@ -48,9 +48,9 @@ The motivaton for our task are mainly summarized as follows:
 
 In this thesis, we provide  an efficient framework based on the  Transformer structure  for visual relationship detection that detects the interactions between objects in the image. The main work and contributions are summarized as following:
 \begin{enumerate}[\qquad  1.]
-	\item We proposed a model based on the transformer structure, which solved the problems of predicate classification, scene graph classification and scene graph detection.
-	\item We proposed an object query instead of learnable query to establish a direct connection with each object, so that we can make full use of the known information from predicate classification and scene graph classification, which made every variable in the model more explanatory.
-	\item We proposed a relation decoder, it established a new context propagation across relationships and objects, which improved the results of our tasks greatly.
+	\item We propose a model based on the transformer structure, which solves the problems of predicate classification, scene graph classification and scene graph detection.
+	\item An object query instead of learnable query is introduced to establish a direct connection with each object, so that we can make full use of the known information from predicate classification and scene graph classification, which makes every variable in the model more explanatory.
+	\item A relation decoder is proposed, and establishes a new context propagation across relationships and objects, which improves the results of our tasks greatly.
 \end{enumerate}
 
 

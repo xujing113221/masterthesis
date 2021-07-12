@@ -11,6 +11,31 @@ We are inspired by Encoder Self-Attention in DETR, and its output attention map 
 
 We input the down-sampled image features into the Multihead Self-Attention module. According to the Equation~\ref{equ:self_attention}, we will get the attention weight between each pixel in the down-sampled image feature. Assuming that in Figure~\ref{fig:ideamethod1} we obtained the down-sampled image feature size of 512x66x50 through the backbone, that is, each layer od the feature has 3300 pixels, we convert it into a sequence of 3300x512, then input it into the Multihead Self-Attention module, and get an attention map size of 3300x3300 . We look for the pixel of the subject in the row of the attention map, and look for the pixel of the object in the column of the attention map ,to find the attention weight between the subject and object pixels. Eg. the ground truth pair $ \left\langle roof, building \right \rangle $ in Figure~\ref{fig:ideamethod1} is located in the attention map as shown in the lower right corner of Figure ~\ref{fig:ideamethod1}.
 
+\begin{figure}[H]
+	\centering
+	\subfigure[The attention from the first pixel of object1 to the whole image.]{
+		\begin{minipage}[t]{15cm}
+			\centering
+			\includegraphics[width=0.8\linewidth]{figures/pixel_attention_idea}
+			\label{fig:idea_pixelloss_a}
+	\end{minipage}}
+	
+	\subfigure[The relationship between objects.]{
+		\begin{minipage}[t]{7cm}
+			\centering
+			\includegraphics[width=0.8\linewidth]{figures/pixel_relation}
+			\label{fig:idea_pixelloss_b}
+	\end{minipage}}
+	\subfigure[The attention map of each pixel of the image feature.]{
+		\begin{minipage}[t]{7cm}
+			\centering
+			\includegraphics[width=0.9\linewidth]{figures/pixel_attentionmap}
+			\label{fig:idea_pixelloss_c}
+	\end{minipage}}
+	\caption[The idea of the pixel attention loss]{The idea of the pixel attention. The Fig. (a) shows, that there is only relationship between $obj_1$ and $obj_2$(the green line),there are no relationship between the others. The Fig. (b) show the position of the realtion pair. The green area means realtionship, the red area means no relationship. $A_{oi \to oj}$ means the attention weights of the pixel of $obj_i$ to  the pixel of $obj_j$.}
+	\label{fig:idea_pixelloss}
+\end{figure}
+
 We hope that through the training of our model, the attention weight of ground truth pairs can be higher than those of pairs without relation. In this way, we can use the attention weight in the evaluation to determine which pairs are most likely to be related.
 \begin{figure}[!htbp]
 		\centering
@@ -44,7 +69,7 @@ We hope that through the training of our model, the attention weight of ground t
 The concrete realization of our idea is as follows: As shown in following Figure~\ref{fig:method1baseline}, first we input an image into the  backbone VGG16~\cite{simonyan2015deep}(see Figure~\ref{fig:vgg16}.) to gets a down-sampled image feature \textit{feature} ,  then it passes through a Multi-Head Self-Attention module to get an attention map and new image feature \textit{feature2}. Finally, the feature of the subject-predicate object is extracted by ROI Align(see in Section~\ref{fig:roialign}), and sent to the predicate classifier as input.
 
 
-\begin{figure}[!htbp]
+\begin{figure}[H]
 	\centering
 	\includegraphics[width=1\linewidth]{figures/method1_baseline}
 	\caption[The baseline of the first method: Pixel-based attention]{The baseline of the  first method: Pixel-based attention}
@@ -52,24 +77,6 @@ The concrete realization of our idea is as follows: As shown in following Figure
 \end{figure}
 
 \subsection{Pixel  Attention Loss}
-
-\begin{figure}[htbp]
-	\centering
-	\subfigure[The relationship between objects.]{
-		\begin{minipage}[t]{7cm}
-			\centering
-			\includegraphics[width=0.8\linewidth]{figures/pixel_relation}
-			\label{fig:idea_pixelloss_a}
-		\end{minipage}}
-	\subfigure[The attention map of each pixel of the image feature.]{
-		\begin{minipage}[t]{7cm}
-			\centering
-			\includegraphics[width=0.9\linewidth]{figures/pixel_attentionmap}
-			\label{fig:idea_pixelloss_b}
-		\end{minipage}}
-	\caption[The idea of the pixel attention loss]{The idea of the pixel attention. The Fig. (a) shows, that there is only relationship between $obj_1$ and $obj_2$(the green line),there are no relationship between the others. The Fig. (b) show the position of the realtion pair. The green area means realtionship, the red area means no relationship. $A_{oi \to oj}$ means the attention weights of the pixel of $obj_i$ to  the pixel of $obj_j$.}
-	\label{fig:idea_pixelloss}
-\end{figure}
 
 We have studied the attention map, and its meaning is the attention between all pixels of the image feature( $ Attention_{p_i\to p_j}, \  wehre \quad p_i,p_j\in \mathbb{P}_{img} $) , $ \mathbb{P}_{img}  $is a collection containing all pixels of the image feature from VGG16.
 

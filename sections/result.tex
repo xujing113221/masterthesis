@@ -65,6 +65,85 @@ In general, we use our  average of attention weights  of each pair to replace th
 \end{figure}
 
 
+\begin{figure}[h!]
+	\centering
+	\subfigure[$ <arm, on, man> $]{
+		\begin{minipage}[t]{3.5cm}
+			\centering
+			\includegraphics[width=0.9\linewidth]{figures/pixel/img2}
+		\end{minipage}
+		\begin{minipage}[t]{3.5cm}
+			\centering
+			\includegraphics[width=0.9\linewidth]{figures/pixel/map2_1}
+		\end{minipage}
+		\begin{minipage}[t]{3.5cm}
+			\centering
+			\includegraphics[width=0.9\linewidth]{figures/pixel/map2_2}
+		\end{minipage}
+		\begin{minipage}[t]{3.5cm}
+			\centering
+			\includegraphics[width=0.9\linewidth]{figures/pixel/map2_3}
+	\end{minipage}}
+	
+	\subfigure[$ <bike, has, wheel> $]{
+		\begin{minipage}[t]{3.5cm}
+			\centering
+			\includegraphics[width=0.9\linewidth]{figures/pixel/img3}
+		\end{minipage}
+		\begin{minipage}[t]{3.5cm}
+			\centering
+			\includegraphics[width=0.9\linewidth]{figures/pixel/map3_1}
+		\end{minipage}
+		\begin{minipage}[t]{3.5cm}
+			\centering
+			\includegraphics[width=0.9\linewidth]{figures/pixel/map3_2}
+		\end{minipage}
+		\begin{minipage}[t]{3.5cm}
+			\centering
+			\includegraphics[width=0.9\linewidth]{figures/pixel/map3_3}
+	\end{minipage}}
+	
+	
+	\subfigure[$<window, on, door>$]{
+		\begin{minipage}[t]{3.5cm}
+			\centering
+			\includegraphics[width=0.9\linewidth]{figures/pixel/img4}
+		\end{minipage}
+		\begin{minipage}[t]{3.5cm}
+			\centering
+			\includegraphics[width=0.9\linewidth]{figures/pixel/map4_1}
+		\end{minipage}
+		\begin{minipage}[t]{3.5cm}
+			\centering
+			\includegraphics[width=0.9\linewidth]{figures/pixel/map4_2}
+		\end{minipage}
+		\begin{minipage}[t]{3.5cm}
+			\centering
+			\includegraphics[width=0.9\linewidth]{figures/pixel/map4_3}
+	\end{minipage}}
+	
+	\subfigure[ $<zebra, has, leg>$]{
+		\begin{minipage}[t]{3.5cm}
+			\centering
+			\includegraphics[width=0.9\linewidth]{figures/pixel/img5}
+		\end{minipage}
+		\begin{minipage}[t]{3.5cm}
+			\centering
+			\includegraphics[width=0.9\linewidth]{figures/pixel/map5_1}
+		\end{minipage}
+		\begin{minipage}[t]{3.5cm}
+			\centering
+			\includegraphics[width=0.9\linewidth]{figures/pixel/map5_2}
+		\end{minipage}
+		\begin{minipage}[t]{3.5cm}
+			\centering
+			\includegraphics[width=0.9\linewidth]{figures/pixel/map5_3}
+	\end{minipage}}
+	
+	\caption[Visualized results of the attention map of a single pixel ]{Visualized results of the attention map of a single pixel. The red box in the figure is subject, and the yellow box is object. We randomly select a few pixels from the subject, then draw the attention map of these pixels to the entire picture. }
+	\label{fig:pixel}
+\end{figure}
+
 \subsubsection{Result analysis}
 
 Then we analyzed the results, and we drew the position of all $ Att_{rel} $s and all $ Att_{no\_rel} $s in the attention map of image~\ref{fig:motor_img} , see Fig.~\ref{fig:overlap} $ (a) $ and $ (b) $ in the figure. And the overlap between them is shown in Figure $ (c). $ We found that $ Att_{rel }$ and $ Att_{no\_rel} $ have a very serious overlap, and are basically the same as $ Att_{rel }$, that is,  $ Att_{no\_rel} $ contains $ Att_{rel }$. The purpose of our Attention Loss is to make $ Att_{rel }$ higher and $ Att_{no\_rel }$ lower. The existence of this overlap makes its purpose very contradictory. For example, the area in Figure~\ref{fig:motor_all0} belongs to $ Att_{rel }$ but it also belongs to $ Att_{no\_rel }$ in Figure~\ref{fig:motor_all1}. We cannot make it higher and lower. This overlap in the image is shown in Figure~\ref{fig:motor_pair}. For example, for the same subject $ man $, there are  pairs $<man,ride,motorcycle>$, $ <man, \varnothing, wheel_1> $  and  $ <man, \varnothing, wheel_2>  $, their objects have an overlap, and the bounding box  of $ motor $ obviously contains the bounding box of  $ wheel $.
@@ -327,6 +406,157 @@ In the object decoder in our model in Fig.~\ref{fig:objectdecoder}, we will obta
 
 We can find that our attention has a very good effect on the attention map. Without attention loss, the attention map is messy. As shown in Fig.~\ref{fig:train_attention_loss}(b), we can clearly see the position and shape of the train, and even better express the position of the train than the bounding box. And the area in other parts of the picture is shown in blue, the background is very clean, highlighting the attention weight of our object, making our decoder pay more attention to this object.
 
+\begin{figure}[H]
+	\centering
+	\subfigure[train]{
+		\begin{minipage}[t]{5cm}
+			\centering
+			\includegraphics[width=0.9\linewidth]{figures/result/train/obj1}
+	\end{minipage}}
+	\subfigure[attention map with our loss]{
+		\begin{minipage}[t]{5cm}
+			\centering
+			\includegraphics[width=0.9\linewidth]{figures/result/train/att1}
+	\end{minipage}}
+	\subfigure[ attention map without our loss]{
+		\begin{minipage}[t]{5cm}
+			\centering
+			\includegraphics[width=0.9\linewidth]{figures/result/train/no1}
+	\end{minipage}}
+	
+	\subfigure[haus]{
+		\begin{minipage}[t]{5cm}
+			\centering
+			\includegraphics[width=0.9\linewidth]{figures/result/train/obj2}
+			\label{fig:motor_man0}
+	\end{minipage}}
+	\subfigure[attention map with our loss]{
+		\begin{minipage}[t]{5cm}
+			\centering
+			\includegraphics[width=0.9\linewidth]{figures/result/train/att2}
+			\label{fig:motor_map0}
+	\end{minipage}}
+	\subfigure[attention map without our loss]{
+		\begin{minipage}[t]{5cm}
+			\centering
+			\includegraphics[width=0.9\linewidth]{figures/result/train/no2}
+			\label{fig:motor_man1}
+	\end{minipage}}
+	
+	\subfigure[man]{
+		\begin{minipage}[t]{5cm}
+			\centering
+			\includegraphics[width=0.9\linewidth]{figures/result/train/obj3}
+			\label{fig:motor_man0}
+	\end{minipage}}
+	\subfigure[attention map with our loss]{
+		\begin{minipage}[t]{5cm}
+			\centering
+			\includegraphics[width=0.9\linewidth]{figures/result/train/att3}
+			\label{fig:motor_map0}
+	\end{minipage}}
+	\subfigure[attention map without our loss]{
+		\begin{minipage}[t]{5cm}
+			\centering
+			\includegraphics[width=0.9\linewidth]{figures/result/train/no3}
+			\label{fig:motor_man1}
+	\end{minipage}}
+	
+	\subfigure[window]{
+		\begin{minipage}[t]{5cm}
+			\centering
+			\includegraphics[width=0.9\linewidth]{figures/result/train/obj4}
+			\label{fig:motor_man0}
+	\end{minipage}}
+	\subfigure[attention map with our  loss]{
+		\begin{minipage}[t]{5cm}
+			\centering
+			\includegraphics[width=0.9\linewidth]{figures/result/train/att4}
+			\label{fig:motor_map0}
+	\end{minipage}}
+	\subfigure[attention map without our loss]{
+		\begin{minipage}[t]{5cm}
+			\centering
+			\includegraphics[width=0.9\linewidth]{figures/result/train/no4}
+			\label{fig:motor_man1}
+	\end{minipage}}
+	
+	\caption[The visualization of our attention loss of the first image in the test dataset]{The visualization of our attention loss of the first image in the test dataset.The first column is the object bounding box, the second column is the visualization result of the attention map when we use the attention loss, and the third column is the visualization result of the attention map without our attention loss.}
+	\label{fig:train_attention_loss}
+\end{figure}
+
+
+
+
+\begin{figure}[H]
+	\centering
+	\subfigure[bus]{
+		\begin{minipage}[t]{5cm}
+			\centering
+			\includegraphics[width=0.9\linewidth]{figures/result/bus/obj1}
+	\end{minipage}}
+	\subfigure[attention map with our loss]{
+		\begin{minipage}[t]{5cm}
+			\centering
+			\includegraphics[width=0.9\linewidth]{figures/result/bus/att1}
+	\end{minipage}}
+	\subfigure[attention map without our loss]{
+		\begin{minipage}[t]{5cm}
+			\centering
+			\includegraphics[width=0.9\linewidth]{figures/result/bus/no1}
+	\end{minipage}}
+	
+	\subfigure[man]{
+		\begin{minipage}[t]{5cm}
+			\centering
+			\includegraphics[width=0.9\linewidth]{figures/result/bus/obj2}
+	\end{minipage}}
+	\subfigure[attention map with our loss]{
+		\begin{minipage}[t]{5cm}
+			\centering
+			\includegraphics[width=0.9\linewidth]{figures/result/bus/att2}
+	\end{minipage}}
+	\subfigure[attention map without our loss]{
+		\begin{minipage}[t]{5cm}
+			\centering
+			\includegraphics[width=0.9\linewidth]{figures/result/bus/no2}
+	\end{minipage}}
+	
+	\subfigure[pants]{
+		\begin{minipage}[t]{5cm}
+			\centering
+			\includegraphics[width=0.9\linewidth]{figures/result/bus/obj3}
+	\end{minipage}}
+	\subfigure[ attention map with our loss]{
+		\begin{minipage}[t]{5cm}
+			\centering
+			\includegraphics[width=0.9\linewidth]{figures/result/bus/att3}
+	\end{minipage}}
+	\subfigure[ attention map without our loss]{
+		\begin{minipage}[t]{5cm}
+			\centering
+			\includegraphics[width=0.9\linewidth]{figures/result/bus/no3}
+	\end{minipage}}
+	
+	\subfigure[board]{
+		\begin{minipage}[t]{5cm}
+			\centering
+			\includegraphics[width=0.9\linewidth]{figures/result/bus/obj4}
+	\end{minipage}}
+	\subfigure[ attention map with our loss]{
+		\begin{minipage}[t]{5cm}
+			\centering
+			\includegraphics[width=0.9\linewidth]{figures/result/bus/att4}
+	\end{minipage}}
+	\subfigure[ attention map without our loss]{
+		\begin{minipage}[t]{5cm}
+			\centering
+			\includegraphics[width=0.9\linewidth]{figures/result/bus/no4}
+	\end{minipage}}
+	
+	\caption[The visualization of our attention loss of the second image in the test dataset]{The visualization of our attention loss of the second image in the test dataset.The first column is the object bounding box, the second column is the visualization result of the attention map when we use the attention loss, and the third column is the visualization result of the attention map without our attention loss.}
+	\label{fig:bus}
+\end{figure}
 
 \begin{table}[!h]
 	\centering
@@ -370,6 +600,43 @@ The Table~\ref{tab:result_relation_decoder} is the result of using the realtion 
 	\caption[The result of our relation decoder in PredCLS]{The result of our relation decoder in PredCLS.}
 	\label{tab:result_relation_decoder}
 \end{table}
+
+
+\begin{figure}[h!]
+	\centering
+	\subfigure[Scenes with objects and bounding boxes with class labels]{
+		\begin{minipage}[t]{5cm}
+			\centering
+			\includegraphics[width=0.7\linewidth]{figures/result/relation_Attention/img1}
+		\end{minipage}
+		\begin{minipage}[t]{5cm}
+			\centering
+			\includegraphics[width=0.8\linewidth]{figures/result/relation_Attention/rel1}
+		\end{minipage}
+		\begin{minipage}[t]{5cm}
+			\centering
+			\includegraphics[width=1\linewidth]{figures/result/relation_Attention/att1}
+	\end{minipage}}
+	
+	\subfigure[Grund truth realtion.]{
+		\begin{minipage}[t]{5cm}
+			\centering
+			\includegraphics[width=0.7\linewidth]{figures/result/relation_Attention/img2}
+		\end{minipage}
+		\begin{minipage}[t]{5cm}
+			\centering
+			\includegraphics[width=0.35\linewidth]{figures/result/relation_Attention/rel2}
+		\end{minipage}
+		\begin{minipage}[t]{5cm}
+			\centering
+			\includegraphics[width=1\linewidth]{figures/result/relation_Attention/att2}
+		\end{minipage}
+	}
+	
+	\caption[The visualized results of the relation decoder attention.]{The visualized results of the relation decoder attention. We get the attention map from the second attention module of the relation decoder, it means which objects the relation pair pays more attention to, and the corresponding  attention weight will be higher in this map.}
+	\label{fig:relation_attetnion}
+\end{figure}
+
 
 %\begin{figure}[h!]
 %	\centering
@@ -526,196 +793,6 @@ In Fig.~\ref{fig:sgdet}  we present an visible experiment result of SGDET. We gi
 
 
 
-
-
-
-\begin{figure}[h!]
-	\centering
-	\subfigure[Scenes with objects and bounding boxes with class labels]{
-		\begin{minipage}[t]{5cm}
-			\centering
-			\includegraphics[width=0.7\linewidth]{figures/result/relation_Attention/img1}
-		\end{minipage}
-		\begin{minipage}[t]{5cm}
-			\centering
-			\includegraphics[width=0.8\linewidth]{figures/result/relation_Attention/rel1}
-		\end{minipage}
-		\begin{minipage}[t]{5cm}
-		\centering
-		\includegraphics[width=1\linewidth]{figures/result/relation_Attention/att1}
-	\end{minipage}}
-	
-	\subfigure[Grund truth realtion.]{
-		\begin{minipage}[t]{5cm}
-			\centering
-			\includegraphics[width=0.7\linewidth]{figures/result/relation_Attention/img2}
-		\end{minipage}
-		\begin{minipage}[t]{5cm}
-			\centering
-			\includegraphics[width=0.35\linewidth]{figures/result/relation_Attention/rel2}
-	\end{minipage}
-\begin{minipage}[t]{5cm}
-	\centering
-	\includegraphics[width=1\linewidth]{figures/result/relation_Attention/att2}
-\end{minipage}
-	}
-	
-	\caption[The visualized results of the relation decoder attention.]{The visualized results of the relation decoder attention. We get the attention map from the second attention module of the relation decoder, it means which objects the relation pair pays more attention to, and the corresponding  attention weight will be higher in this map.}
-	\label{fig:relation_attetnion}
-\end{figure}
-
-
-\begin{figure}[h!]
-	\centering
-	\subfigure[train]{
-		\begin{minipage}[t]{5cm}
-			\centering
-			\includegraphics[width=0.9\linewidth]{figures/result/train/obj1}
-	\end{minipage}}
-	\subfigure[attention map with our loss]{
-		\begin{minipage}[t]{5cm}
-			\centering
-			\includegraphics[width=0.9\linewidth]{figures/result/train/att1}
-	\end{minipage}}
-	\subfigure[ attention map without our loss]{
-		\begin{minipage}[t]{5cm}
-			\centering
-			\includegraphics[width=0.9\linewidth]{figures/result/train/no1}
-	\end{minipage}}
-	
-	\subfigure[haus]{
-		\begin{minipage}[t]{5cm}
-			\centering
-			\includegraphics[width=0.9\linewidth]{figures/result/train/obj2}
-			\label{fig:motor_man0}
-	\end{minipage}}
-	\subfigure[attention map with our loss]{
-		\begin{minipage}[t]{5cm}
-			\centering
-			\includegraphics[width=0.9\linewidth]{figures/result/train/att2}
-			\label{fig:motor_map0}
-	\end{minipage}}
-	\subfigure[attention map without our loss]{
-		\begin{minipage}[t]{5cm}
-			\centering
-			\includegraphics[width=0.9\linewidth]{figures/result/train/no2}
-			\label{fig:motor_man1}
-	\end{minipage}}
-	
-	\subfigure[man]{
-		\begin{minipage}[t]{5cm}
-			\centering
-			\includegraphics[width=0.9\linewidth]{figures/result/train/obj3}
-			\label{fig:motor_man0}
-	\end{minipage}}
-	\subfigure[attention map with our loss]{
-		\begin{minipage}[t]{5cm}
-			\centering
-			\includegraphics[width=0.9\linewidth]{figures/result/train/att3}
-			\label{fig:motor_map0}
-	\end{minipage}}
-	\subfigure[attention map without our loss]{
-		\begin{minipage}[t]{5cm}
-			\centering
-			\includegraphics[width=0.9\linewidth]{figures/result/train/no3}
-			\label{fig:motor_man1}
-	\end{minipage}}
-	
-	\subfigure[window]{
-		\begin{minipage}[t]{5cm}
-			\centering
-			\includegraphics[width=0.9\linewidth]{figures/result/train/obj4}
-			\label{fig:motor_man0}
-	\end{minipage}}
-	\subfigure[attention map with our  loss]{
-		\begin{minipage}[t]{5cm}
-			\centering
-			\includegraphics[width=0.9\linewidth]{figures/result/train/att4}
-			\label{fig:motor_map0}
-	\end{minipage}}
-	\subfigure[attention map without our loss]{
-		\begin{minipage}[t]{5cm}
-			\centering
-			\includegraphics[width=0.9\linewidth]{figures/result/train/no4}
-			\label{fig:motor_man1}
-	\end{minipage}}
-	
-	\caption[The visualization of our attention loss of the first image in the test dataset]{The visualization of our attention loss of the first image in the test dataset.The first column is the object bounding box, the second column is the visualization result of the attention map when we use the attention loss, and the third column is the visualization result of the attention map without our attention loss.}
-	\label{fig:train_attention_loss}
-\end{figure}
-
-
-
-
-\begin{figure}[h!]
-	\centering
-	\subfigure[bus]{
-		\begin{minipage}[t]{5cm}
-			\centering
-			\includegraphics[width=0.9\linewidth]{figures/result/bus/obj1}
-	\end{minipage}}
-	\subfigure[attention map with our loss]{
-		\begin{minipage}[t]{5cm}
-			\centering
-			\includegraphics[width=0.9\linewidth]{figures/result/bus/att1}
-	\end{minipage}}
-	\subfigure[attention map without our loss]{
-		\begin{minipage}[t]{5cm}
-			\centering
-			\includegraphics[width=0.9\linewidth]{figures/result/bus/no1}
-	\end{minipage}}
-	
-	\subfigure[man]{
-		\begin{minipage}[t]{5cm}
-			\centering
-			\includegraphics[width=0.9\linewidth]{figures/result/bus/obj2}
-	\end{minipage}}
-	\subfigure[attention map with our loss]{
-		\begin{minipage}[t]{5cm}
-			\centering
-			\includegraphics[width=0.9\linewidth]{figures/result/bus/att2}
-	\end{minipage}}
-	\subfigure[attention map without our loss]{
-		\begin{minipage}[t]{5cm}
-			\centering
-			\includegraphics[width=0.9\linewidth]{figures/result/bus/no2}
-	\end{minipage}}
-	
-	\subfigure[pants]{
-		\begin{minipage}[t]{5cm}
-			\centering
-			\includegraphics[width=0.9\linewidth]{figures/result/bus/obj3}
-	\end{minipage}}
-	\subfigure[ attention map with our loss]{
-		\begin{minipage}[t]{5cm}
-			\centering
-			\includegraphics[width=0.9\linewidth]{figures/result/bus/att3}
-	\end{minipage}}
-	\subfigure[ attention map without our loss]{
-		\begin{minipage}[t]{5cm}
-			\centering
-			\includegraphics[width=0.9\linewidth]{figures/result/bus/no3}
-	\end{minipage}}
-	
-	\subfigure[board]{
-		\begin{minipage}[t]{5cm}
-			\centering
-			\includegraphics[width=0.9\linewidth]{figures/result/bus/obj4}
-	\end{minipage}}
-	\subfigure[ attention map with our loss]{
-		\begin{minipage}[t]{5cm}
-			\centering
-			\includegraphics[width=0.9\linewidth]{figures/result/bus/att4}
-	\end{minipage}}
-	\subfigure[ attention map without our loss]{
-		\begin{minipage}[t]{5cm}
-			\centering
-			\includegraphics[width=0.9\linewidth]{figures/result/bus/no4}
-	\end{minipage}}
-	
-	\caption[The visualization of our attention loss of the second image in the test dataset]{The visualization of our attention loss of the second image in the test dataset.The first column is the object bounding box, the second column is the visualization result of the attention map when we use the attention loss, and the third column is the visualization result of the attention map without our attention loss.}
-	\label{fig:bus}
-\end{figure}
 
 
 
