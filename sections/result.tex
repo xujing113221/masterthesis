@@ -33,37 +33,14 @@ Visual relationship detection involves object classification, localization and p
 In our experiment, due to the incomplete annotation of the true relationship, we use the relationship detection $ Recall@K $ as an evaluation indicator, which measures the scores of the true relationship triples in the top K most reliable triple predictions that appear in the image.
 
 
+\label{sec:experimentpixel}
 \section{Experiments on Pixel-based Attention}
-In Section~\ref{sec:pixel_base}, we put forward related ideas, through the attention map in Figure~\ref{fig:method1baseline} to find possible relationships in the detected pictures. We hope that the most relevant area can be directly reflected in the attention map, so we designed an Attention loss function(see Eq.~\ref{pixel_attention_loss}) so that the attention weights of the relevant area are higher than the non-relevant area.
+In Section~\ref{sec:pixel_base}, we put forward related ideas, through the attention map in Fig.~\ref{fig:method1baseline} to find possible relationships in the detected pictures. We hope that the most relevant area can be directly reflected in the attention map, so we designed an attention loss function(see Eq.~\ref{pixel_attention_loss}) so that the attention weights of the relevant area are higher than the non-relevant area.
 
-We tried to add a Multihead Self-Attention module after obtaining the image feature in VGG16 based on the code of RelDN~\cite{zhang2019graphical},  so that we obtained a new image feature with a size of $ [bs, 512, 50, 66]  $and an  Attention map with a size of $ [bs, 3300, 3300] $, where bs is batch size=2. We build the baseline as the Fig.~\ref{fig:method1baseline} shown.
+We tried to add a multi-head self-attention module after obtaining the image feature in VGG16 based on the code of RelDN~\cite{zhang2019graphical},  so that we obtained a new image feature with a size of $ [bs, 512, 50, 66]  $and an  attention map with a size of $ [bs, 3300, 3300] $, where bs is batch size=2. We build the baseline as the Fig.~\ref{fig:method1baseline} shown.
 
 \subsubsection{Result of the Pixel Attention Loss  Function}
-Figure~\ref{fig:motor_attention} shows the result of our training. Figure~\ref{fig:motor_img} is our input, and Figure~\ref{fig:motor_attention_map} is the corresponding attention map. In order to show it well, we normalized it and drew it through Matlab.
-
-From the results, our attention loss has made certain modifications to the attention map. But in general, the values in the attention map are relatively average, and there is no strong distinguish ability. For instance, the ground truth pair $ <man, motorcycle>  $ shown in Fig.~\ref{fig:motor_man0}, its location of the corresponding area in attention map shown in Fig.~\ref{fig:motor_map0}. We can see the attention values in the area of the attention map(Fig.~\ref{fig:motor_attention_map}) is not higher than other areas, even be low.
-
-In general, we use our  average of attention weights  of each pair to replace the original pair score ($ score_{pair}=score_{subject }*score_{predicate}* score_{object} $) in the evaluation to sort relation pairs, and it does not improve the recall rate of the relation.
-
-\begin{figure}[!h]
-	\centering
-	\subfigure[Image input.]{
-		\begin{minipage}[t]{7.5cm}
-			\centering
-			\includegraphics[width=0.95\linewidth]{figures/motor/img}
-			\label{fig:motor_img}
-	\end{minipage}}
-	\subfigure[The result of a normalized Attention Map.]{
-		\begin{minipage}[t]{7.5cm}
-			\centering
-			\includegraphics[width=0.95\linewidth]{figures/motor/attention}
-			\label{fig:motor_attention_map}
-	\end{minipage}}
-	
-	\caption[The result of a normalized Attention Map drawn by matlab]{The result of a normalized Attention Map drawn by matlab.}
-	\label{fig:motor_attention}
-\end{figure}
-
+Figure~\ref{fig:singlepixelmap} shows the attention map of a single pixel after loss function processing. The attention weights between each pixels of subject and the entire image is computed, which can be expressed as $ \forall Attention_{p^k_{sbj} \to p^i_{img}} , p^i_{img} \in \mathbb{P}_{img} $, where k is the $ k^{th} $ pixel of the subject.
 
 \begin{figure}[h!]
 	\centering
@@ -83,7 +60,8 @@ In general, we use our  average of attention weights  of each pair to replace th
 		\begin{minipage}[t]{3.5cm}
 			\centering
 			\includegraphics[width=0.9\linewidth]{figures/pixel/map2_3}
-	\end{minipage}}
+		\end{minipage}
+		\label{fig:singlepixelmap_a}}
 	
 	\subfigure[$ <bike, has, wheel> $]{
 		\begin{minipage}[t]{3.5cm}
@@ -101,7 +79,8 @@ In general, we use our  average of attention weights  of each pair to replace th
 		\begin{minipage}[t]{3.5cm}
 			\centering
 			\includegraphics[width=0.9\linewidth]{figures/pixel/map3_3}
-	\end{minipage}}
+		\end{minipage}
+		\label{fig:singlepixelmap_b}}
 	
 	
 	\subfigure[$<window, on, door>$]{
@@ -120,7 +99,8 @@ In general, we use our  average of attention weights  of each pair to replace th
 		\begin{minipage}[t]{3.5cm}
 			\centering
 			\includegraphics[width=0.9\linewidth]{figures/pixel/map4_3}
-	\end{minipage}}
+		\end{minipage}
+		\label{fig:singlepixelmap_c}}
 	
 	\subfigure[ $<zebra, has, leg>$]{
 		\begin{minipage}[t]{3.5cm}
@@ -138,21 +118,67 @@ In general, we use our  average of attention weights  of each pair to replace th
 		\begin{minipage}[t]{3.5cm}
 			\centering
 			\includegraphics[width=0.9\linewidth]{figures/pixel/map5_3}
-	\end{minipage}}
+		\end{minipage}
+		\label{fig:singlepixelmap_d}}
 	
 	\caption[Visualized results of the attention map of a single pixel ]{Visualized results of the attention map of a single pixel. The red box in the figure is subject, and the yellow box is object. We randomly select a few pixels from the subject, then draw the attention map of these pixels to the entire picture. }
-	\label{fig:pixel}
+	\label{fig:singlepixelmap}
+\end{figure}
+
+As shown in Figure~\ref{fig:singlepixelmap_a}, we randomly select three pixels from subject \textit{arm} and drew their attention weights map for the entire image, the red box is the subject \textit{arm} and the yellow box is the object\textit{ man}, and the ground truth relation is \textit{arm on man}. In the picture, the most highlights are in the yellow box, which means that these pixels of the subject focus more on the object \textit{man}. Although the loss function performs well in figure (a), it works not well with the other picture, such as the figure (b), (c), (d).
+
+In Figure~\ref{fig:singlepixelmap_b}, the subject is \textit{bike}, and the object is \textit{wheel}. We also select three pixels from the subject and draw their attention maps. In the three attention maps, most of the highlights are out of the yellow box, which means that the pixels of subject \textit{bike} pays little attention the object \textit{wheel}, and from the distribution of the highlights it can be find that the pixels pay more attention to the rest part of the subject \textit{bike}.
+
+In Figure~\ref{fig:singlepixelmap_c}, the subject is \textit{window}, and the object is \textit{door}. In the attention maps, the pixels of  \textit{window} pay nor attention to the subject or the object. They focus on the lamps, which has no relation with the subject \textit{window}.
+
+The attention maps of figure~\ref{fig:singlepixelmap_d} shows that some pixels of subject \textit{zebra} focus on the subject and some of them focus on the parts of the image except the subject and object.
+
+After analyzing the result of the experiments, it comes to a conclusion that this loss function performs not well. With this loss function, most $ \forall Att_i^{rel} $ are not able to reflect the relation between subjects and objects. The results show that most of subjects can not pay attention to the right objects, they focus more on themselves or the parts that has no relation to them.
+
+
+
+\begin{figure}[!h]
+	\centering
+	\subfigure[Image input.]{
+		\begin{minipage}[t]{7.5cm}
+			\centering
+			\includegraphics[width=0.95\linewidth]{figures/motor/img}
+			\label{fig:motor_img}
+	\end{minipage}}
+	\subfigure[The result of a normalized attention map.]{
+		\begin{minipage}[t]{7.5cm}
+			\centering
+			\includegraphics[width=0.8\linewidth]{figures/motor/attention}
+			\label{fig:motor_attention_map}
+	\end{minipage}}
+	
+	\caption[The result of a normalized attention map drawn by matlab]{The result of a normalized Attention Map drawn by matlab.}
+	\label{fig:motor_attention}
 \end{figure}
 
 \subsubsection{Result analysis}
 
-Then we analyzed the results, and we drew the position of all $ Att_{rel} $s and all $ Att_{no\_rel} $s in the attention map of image~\ref{fig:motor_img} , see Fig.~\ref{fig:overlap} $ (a) $ and $ (b) $ in the figure. And the overlap between them is shown in Figure $ (c). $ We found that $ Att_{rel }$ and $ Att_{no\_rel} $ have a very serious overlap, and are basically the same as $ Att_{rel }$, that is,  $ Att_{no\_rel} $ contains $ Att_{rel }$. The purpose of our Attention Loss is to make $ Att_{rel }$ higher and $ Att_{no\_rel }$ lower. The existence of this overlap makes its purpose very contradictory. For example, the area in Figure~\ref{fig:motor_all0} belongs to $ Att_{rel }$ but it also belongs to $ Att_{no\_rel }$ in Figure~\ref{fig:motor_all1}. We cannot make it higher and lower. This overlap in the image is shown in Figure~\ref{fig:motor_pair}. For example, for the same subject $ man $, there are  pairs $<man,ride,motorcycle>$, $ <man, \varnothing, wheel_1> $  and  $ <man, \varnothing, wheel_2>  $, their objects have an overlap, and the bounding box  of $ motor $ obviously contains the bounding box of  $ wheel $.
+In order to find the cause of the above problem, the complete attention map of the Fig.~\ref{fig:motor_img} is drawn in Figure~\ref{fig:motor_attention_map}. It can be seen from the figure that the overall distribution of $ \forall Attention_{p^i_{img} \to p^j_{img}} , p^i_{img},p^j_{img} \in \mathbb{P}_{img} $ is still relatively uniform, and it is not intuitive to distinguish which objects have a relationship. It can only indicate that the loss function has changed the attention map, but this change has no benefits to the relationship detection.
 
-This overlap is not a special case. We found that almost all images have this situation, so the attention loss we designed is meaningless, and the idea of Piexl-based Attention also failed. We cannot use the attention between pixels to obtain which pair is most likely to have a relationship.
+Then Fig.~\ref{fig:motor_pair}  shows the position about the attention weights set for each relation pair. Figure(d) shows the position of $ \forall Attention_{p^i_{man} \to p^j_{bike}} $ ,  $ \forall Attention_{p^i_{man} \to p^j_{bike}} \in \forall Att_{rel} $ in the attention map. Because the whole bike is the ground truth object, the loss function should increase its attention weights. While the white areas in Figure(e) and Figure (f) belong to $ \forall Att_{no\_rel} $, which means that the man and wheels have no intersection in this scene, the loss function should lower its attention weights.
+
+In the figure, the subject is \textit{man} and the objects are \textit{bike}, \textit{$ wheel_1 $}, \textit{$ wheel_2 $}. In Figure 5.4 (a)(b)(c) , \textit{$ wheel_1 $} and \textit{$ wheel_2 $} belong to \textit{bike}, and there is overlap between bike and wheels.It causes that the sets of attention weights for these three relation pairs also have overlap,  so this loss function cannot highlight the attention weights of $ \forall Attention_{p^i_{man} \to p^j_{bike}} $ while reducing the attention weights of  $ \forall Att_{no\_rel} $.
+
+This overlap is so serious and in Figure~\ref{fig:overlap} there is an example analyze.The white area in Figure~\ref{fig:overlap}(a) is the position of set of all relation pairs$ Att_{rel} $  about the image in the attention map, and the white area in Figure~\ref{fig:overlap}(b)  are position of the set of all no relation pairs $ Att_{no\_rel} $.When we calculate the overlap between $Att_{rel} $ and  $Att_{no\_rel} $, we can find that the white area of Figure(b) is contained in the white area of Figure(a). It can be expressed as  $$ \forall Att^i_{rel} \cap  \forall Att^i_{no\_rel } = \forall Att^i_{rel}  $$ or $$ \forall Att^i_{rel}  \subseteq  \forall Att^i_{no\_rel }$$.
+
+This  overlap is not a special case, almost all pictures have this problem, so the pixel attention loss becomes meaningless. It cannot make the attention weights of the overlapping areas higher or lower so the idea of pixel-based attention can not go further, and it is not feasible to use the attention between pixels to obtain which relation pair is most likely to have a relationship.
+
+%From the results, our attention loss has made certain modifications to the attention map. But in general, the values in the attention map are relatively average, and there is no strong distinguish ability. For instance, the ground truth pair $ <man, motorcycle>  $ shown in Fig.~\ref{fig:motor_man0}, its location of the corresponding area in attention map shown in Fig.~\ref{fig:motor_map0}. We can see the attention values in the area of the attention map(Fig.~\ref{fig:motor_attention_map}) is not higher than other areas, even be low.
+%
+%In general, we use our  average of attention weights  of each pair to replace the original pair score ($ score_{pair}=score_{subject }*score_{predicate}* score_{object} $) in the evaluation to sort relation pairs, and it does not improve the recall rate of the relation.
+%
+%Then we analyzed the results, and we drew the position of all $ Att_{rel} $s and all $ Att_{no\_rel} $s in the attention map of image~\ref{fig:motor_img} , see Fig.~\ref{fig:overlap} $ (a) $ and $ (b) $ in the figure. And the overlap between them is shown in Figure $ (c). $ We found that $ Att_{rel }$ and $ Att_{no\_rel} $ have a very serious overlap, and are basically the same as $ Att_{rel }$, that is,  $ Att_{no\_rel} $ contains $ Att_{rel }$. The purpose of our Attention Loss is to make $ Att_{rel }$ higher and $ Att_{no\_rel }$ lower. The existence of this overlap makes its purpose very contradictory. For example, the area in Figure~\ref{fig:motor_all0} belongs to $ Att_{rel }$ but it also belongs to $ Att_{no\_rel }$ in Figure~\ref{fig:motor_all1}. We cannot make it higher and lower. This overlap in the image is shown in Figure~\ref{fig:motor_pair}. For example, for the same subject $ man $, there are  pairs $<man,ride,motorcycle>$, $ <man, \varnothing, wheel_1> $  and  $ <man, \varnothing, wheel_2>  $, their objects have an overlap, and the bounding box  of $ motor $ obviously contains the bounding box of  $ wheel $.
+%
+%This overlap is not a special case. We found that almost all images have this situation, so the attention loss we designed is meaningless, and the idea of Piexl-based Attention also failed. We cannot use the attention between pixels to obtain which pair is most likely to have a relationship.
 
 \begin{figure}[h!]
 	\centering
-	\subfigure[$<man,ride,motorcycle>$]{
+	\subfigure[$<man,ride,bike>$]{
 		\begin{minipage}[t]{5cm}
 			\centering
 			\includegraphics[width=0.9\linewidth]{figures/motor/man0}
@@ -162,28 +188,28 @@ This overlap is not a special case. We found that almost all images have this si
 		\begin{minipage}[t]{5cm}
 			\centering
 			\includegraphics[width=0.9\linewidth]{figures/motor/man1}
-			\label{fig:motor_map0}
+			\label{fig:motor_man1}
 	\end{minipage}}
 	\subfigure[$ <man, \varnothing, wheel_2>  $]{
 		\begin{minipage}[t]{5cm}
 			\centering
 			\includegraphics[width=0.9\linewidth]{figures/motor/man2}
-			\label{fig:motor_man1}
+			\label{fig:motor_man2}
 	\end{minipage}}
 
-	\subfigure[$Attention_{man \to motorcycle} $]{
+	\subfigure[$\forall Attention_{p^i_{man} \to p^j_{bike}} $]{
 		\begin{minipage}[t]{5cm}
 			\centering
 			\includegraphics[width=0.9\linewidth]{figures/motor/map0}
-			\label{fig:motor_map1}
+			\label{fig:motor_map0}
 	\end{minipage}}
-	\subfigure[$Attention_{man \to wheel_1} $]{
+	\subfigure[$\forall Attention_{p^i_{man} \to p^j_{wheel_1} } $]{
 		\begin{minipage}[t]{5cm}
 			\centering
 			\includegraphics[width=0.9\linewidth]{figures/motor/map1}
-			\label{fig:motor_man2}
+			\label{fig:motor_map1}
 	\end{minipage}}
-	\subfigure[$Attention_{man \to wheel_2} $]{
+	\subfigure[$\forall Attention_{p^i_{man} \to p^j_{wheel_2} } $]{
 		\begin{minipage}[t]{5cm}
 			\centering
 			\includegraphics[width=0.9\linewidth]{figures/motor/map2}
@@ -196,19 +222,19 @@ This overlap is not a special case. We found that almost all images have this si
 
 \begin{figure}[tbph!]
 	\centering
-	\subfigure[All pixels of $Att_{rel}$]{
+	\subfigure[ $\forall Att^i_{rel}$]{
 		\begin{minipage}[t]{5cm}
 			\centering
 			\includegraphics[width=0.9\linewidth]{figures/motor/all0}
 			\label{fig:motor_all0}
 	\end{minipage}}
-	\subfigure[All pixels of $ Att_{no\_rel }$]{
+	\subfigure[$ \forall Att^i_{no\_rel }$]{
 		\begin{minipage}[t]{5cm}
 			\centering
 			\includegraphics[width=0.9\linewidth]{figures/motor/all1}
 			\label{fig:motor_all1}
 	\end{minipage}}
-	\subfigure[Overlap]{
+	\subfigure[$ \forall Att^i_{rel} \cap  \forall Att^i_{no\_rel } $]{
 		\begin{minipage}[t]{5cm}
 			\centering
 			\includegraphics[width=0.9\linewidth]{figures/motor/all0}
@@ -395,7 +421,7 @@ We designed an attention loss to make our object feature better. In this part, w
 
 The Figure~\ref{fig:attention_loss_result} is the training result of our attention loss. We record a loss every 100 step, sum up 1000 data, and use matlab to perform low-pass filtering to draw the result. We found that our attention from the beginning $ 10^{-4} $ dropped rapidly and gradually tended to 0 in the process of about 500 steps.
 
-\begin{figure}[h!]
+\begin{figure}[h]
 	\centering
 	\includegraphics[width=0.8\linewidth]{figures/result/attention_loss}
 	\caption[Training result of the Attention Loss]{Training result of the Attention Loss.}
@@ -428,57 +454,48 @@ We can find that our attention has a very good effect on the attention map. With
 		\begin{minipage}[t]{5cm}
 			\centering
 			\includegraphics[width=0.9\linewidth]{figures/result/train/obj2}
-			\label{fig:motor_man0}
 	\end{minipage}}
 	\subfigure[attention map with our loss]{
 		\begin{minipage}[t]{5cm}
 			\centering
 			\includegraphics[width=0.9\linewidth]{figures/result/train/att2}
-			\label{fig:motor_map0}
 	\end{minipage}}
 	\subfigure[attention map without our loss]{
 		\begin{minipage}[t]{5cm}
 			\centering
 			\includegraphics[width=0.9\linewidth]{figures/result/train/no2}
-			\label{fig:motor_man1}
 	\end{minipage}}
 	
 	\subfigure[man]{
 		\begin{minipage}[t]{5cm}
 			\centering
 			\includegraphics[width=0.9\linewidth]{figures/result/train/obj3}
-			\label{fig:motor_man0}
 	\end{minipage}}
 	\subfigure[attention map with our loss]{
 		\begin{minipage}[t]{5cm}
 			\centering
 			\includegraphics[width=0.9\linewidth]{figures/result/train/att3}
-			\label{fig:motor_map0}
 	\end{minipage}}
 	\subfigure[attention map without our loss]{
 		\begin{minipage}[t]{5cm}
 			\centering
 			\includegraphics[width=0.9\linewidth]{figures/result/train/no3}
-			\label{fig:motor_man1}
 	\end{minipage}}
 	
 	\subfigure[window]{
 		\begin{minipage}[t]{5cm}
 			\centering
 			\includegraphics[width=0.9\linewidth]{figures/result/train/obj4}
-			\label{fig:motor_man0}
 	\end{minipage}}
 	\subfigure[attention map with our  loss]{
 		\begin{minipage}[t]{5cm}
 			\centering
 			\includegraphics[width=0.9\linewidth]{figures/result/train/att4}
-			\label{fig:motor_map0}
 	\end{minipage}}
 	\subfigure[attention map without our loss]{
 		\begin{minipage}[t]{5cm}
 			\centering
 			\includegraphics[width=0.9\linewidth]{figures/result/train/no4}
-			\label{fig:motor_man1}
 	\end{minipage}}
 	
 	\caption[The visualization of our attention loss of the first image in the test dataset]{The visualization of our attention loss of the first image in the test dataset.The first column is the object bounding box, the second column is the visualization result of the attention map when we use the attention loss, and the third column is the visualization result of the attention map without our attention loss.}
