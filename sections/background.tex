@@ -5,7 +5,7 @@ They are the basic of our framework.
 
 \section{Transformer}
 \label{section:transformer}
-The Transformer is a model proposed by Vaswani, Ashish et al. in 2017~\cite{vaswani2017attention}  that uses the attention mechanism to increase the speed of model training. Compared with recurrent networks eg., Long short-term memory (LSTM), the Transformer can model long dependencies between input sequence elements and support parallel processing of sequence. and get higher both accuracy and performance than the popular RNN recurrent neural network. It mainly consists of two parts: the Encoder and Decoder. The structure of the Transformer is shown below as Fig.~\ref{fig:transformer}.
+The Transformer is a model proposed by Vaswani, Ashish et al. in 2017~\cite{vaswani2017attention}  that uses the attention mechanism to increase the speed of model training. Compared with recurrent networks, such as Long short-term memory (LSTM), the Transformer can model long dependencies between input sequence elements and support parallel processing of sequence, and get higher both accuracy and performance than the popular RNN recurrent neural network. It mainly consists of two parts: the Encoder and Decoder. The structure of the Transformer is shown below as Fig.~\ref{fig:transformer}.
 
 The transformer model  was first applied to a wide range of language tasks such as text classification, machine translation, and question answering, and demonstrated exemplary performance. The breakthrough from Transformer network in the field of natural language processing (NLP) has aroused great interest in the computer vision community, meanwhile the Transformer model and its variants have been successfully applied to the various fields of computer vision, such as image recognition, object detection, segmentation, image super-resolution, video understanding, image generation and so on. 
 
@@ -20,7 +20,7 @@ The transformer model  was first applied to a wide range of language tasks such 
 \subsection{Self-Attention}
 An attention function can be described as mapping a query and a set of key-value pairs to an output, where the query, keys, values, and output are all vectors. The output is computed as a weighted sum of the values, where the weight assigned to each value is computed by a compatibility function of the query with the corresponding key.
 
-From the following table~\ref{tab:complexity_compare}, we can know that self attention has a great improvement for longer sequences. For image data, we can think of it as a longer sequence, and it would be better to optimize it.
+From the following Table~\ref{tab:complexity_compare}, we can know that self attention has a great improvement for longer sequences. For image data, we can think of it as a longer sequence, and it would be better to optimize it.
 \begin{table}[!htbp]
 	\resizebox{\textwidth}{15mm}{
 	\begin{tabular}{cccc}
@@ -33,11 +33,11 @@ From the following table~\ref{tab:complexity_compare}, we can know that self att
 	\end{tabular}}
 
 \caption[Compare between Self-Attention and Convolutional ]
-{ Maximum path lengths, per layer complexity and minimum number of sequential operations for different layer types. n is the sequence length, d is the representation dimension, k is the kernel size of convolutions and r the size of the neighborhood in restricted self-attention. ~\cite{vaswani2017attention}.}
+{ Maximum path lengths, per layer complexity and minimum number of sequential operations for different layer types. n is the sequence length, d is the representation dimension, k is the kernel size of convolutions and r the size of the neighborhood in restricted self-attention. Obtained from ~\cite{vaswani2017attention}.}
 	\label{tab:complexity_compare}
 \end{table}
 
-There are three very important vectors in attention, query, key, and value. For self-attention, these three vectors are obtained by multiplying the same vector by different matrices (see in Fig.~\ref{fig:attention}).An attention function can be described as mapping a query and a set of key-value pairs to an output. The input consists of queries and keys of dimension d , and values of dimension d ,softmax function to obtain the weights on the values.
+There are three very important vectors in attention, query, key, and value. For self-attention, these three vectors are obtained by multiplying the same vector by different matrices (see Fig.~\ref{fig:attention}).An attention function can be described as mapping a query and a set of key-value pairs to an output. The input consists of queries and keys of dimension $ d  $, and values of dimension $ d $, the softmax function to obtain the weights on the values.
 
 
 \begin{equation}
@@ -50,13 +50,13 @@ There are three very important vectors in attention, query, key, and value. For 
 	\centering
 	\includegraphics[width = 0.8\textwidth]{figures/attention.png}
 	\caption[Scaled Dot-Product Attention and Multi-Head Attention]
-	{ (left) Scaled Dot-Product Attention. (right) Multi-Head Attention consists of several attention layers running in parallel. (Image source:~\cite{vaswani2017attention}.)}
+	{ (left) Scaled Dot-Product Attention. (right) Multi-Head Attention consists of several attention layers running in parallel. (Image source:~\cite{vaswani2017attention}).}
 	\label{fig:attention}
 \end{figure}
 
 \subsection{Multihead Attention}
 
-Multi-head attention allows the model to attend to different representation subspaces at different positions and therefore process richer information. The queries, keys and values are linearly projected h times with different, learned linear projections to dk, dk and dv dimensions respectively. On each of these projections the attention function is computed in parallel, resulting in dv dimensional output values. These are concatenated and projected to obtain the final values, as depicted in Figure 2.3.
+Multi-head attention allows the model to attend to different representation subspaces at different positions and therefore process richer information. The queries, keys and values are linearly projected h times with different, learned linear projections to $ dk $, $ dk $ and $ dv $ dimensions respectively. On each of these projections the attention function is computed in parallel, resulting in dv dimensional output values. These are concatenated and projected to obtain the final values, as depicted in Figure 2.3.
 
 \begin{equation}
 	\begin{aligned}
@@ -66,7 +66,7 @@ where \ head_i = Attention(QW_i^Q,KW_i^K,VW_i^V)
 \end{equation}
 
 \subsection{Positional Encoding}
-In the case of RNNs, we feed the words sequentially to the model, each token is aware of how it was ordered. However, multi-head attention computes the output of each item in the sequence independently with no notion of word order. It is inefficient to model the sequence information without any special order or position. To account for the order of the words in the input sequence, the Transformer model adds a vector to each input embedding called Positional Encoding. Positional Encoding from the Transformer model is computed by sine and cosine functions of different frequencies as 
+In the case of RNNs, we feed the words sequentially to the model, each token is aware of how it was ordered. However, multi-head attention computes the output of each item in the sequence independently with no notion of word order. It is inefficient to model the sequence information without any special order or position. To account for the order of the words in the input sequence, the Transformer model adds a vector to each input embedding called Positional Encoding. Positional Encoding from the Transformer model is computed by sine and cosine functions of different frequencies as:
 \begin{equation}
 	\begin{aligned}
 	PE_{(pos,2i)} = sin(pos/10000^{2i/d_{model}}),\\
@@ -75,15 +75,15 @@ In the case of RNNs, we feed the words sequentially to the model, each token is 
 	\label{equ:position_embedding}
 \end{equation}
 
-\subsection{The Overall Model Architecture}
+\subsection{Encoder-Decoder Architecture}
 The Transformer model with its encoder and decoder components is illustrated in Figure 11. Both Encoder and Decoder are composed of multiple identical encoders and decoders that can be stacked on top of each other Nx times. The encoder stack and the decoder stack share the same number of Nx.
 
-Encoder: The encoder block is a stack of Nx identical layers. Each layer has a multi-head self-attention mechanism sub-layer followed by a position-wise fully connected feed-forward network sub-layer. There are two on each floor sub-layer, the first is a multi-head self-attention mechanism, and the second is a simple feed-forward network with fully connected locations. The residual structure ~\cite{He_2016_CVPR} (see figure ~\ref{fig:transformer})is used on both sub-layers, and finally layer normalization ~\cite{ba2016layer}. That is, the output of each sub-layer is $LayerNorm(x + Sublayer(x))$, where $Sublayer(x)$ is the function implemented by the sub-layer itself. Since the model does not contain any recurrence and convolution, an embedding must be added to the input so that the model can be used in order of the sequence.
+\textbf{Encoder}: The encoder block is a stack of Nx identical layers. Each layer has a multi-head self-attention mechanism sub-layer followed by a position-wise fully connected feed-forward network sub-layer. There are two on each floor sub-layer, the first is a multi-head self-attention mechanism, and the second is a simple feed-forward network with fully connected locations. The residual structure ~\cite{He_2016_CVPR} (see figure ~\ref{fig:transformer})is used on both sub-layers, and finally layer normalization ~\cite{ba2016layer}. That is, the output of each sub-layer is $LayerNorm(x + Sublayer(x))$, where $Sublayer(x)$ is the function implemented by the sub-layer itself. Since the model does not contain any recurrence and convolution, an embedding must be added to the input so that the model can be used in order of the sequence.
 
 The input received by an encoder is a list of vectors, it will input the list of vectors to the self-attention layer, then pass through the feed-forward neural network layer(FFN), and finally get the output, which is passed to the next encoder. The word at each position passes through the self-attention layer, and each output vector obtained passes through the FFN separately, and the feed-forward neural network through each vector is the same.
 
 
-Decoder: The decoder block is also a stack of Nx identical layers. In addition to the two sub-layers in each encoder layer, the decoder has an extra Masked Multi-Head Attention sub-layer to avoid this attention sub-layer looking into the future.
+\textbf{Decoder}: The decoder block is also a stack of Nx identical layers. In addition to the two sub-layers in each encoder layer, the decoder has an extra Masked Multi-Head Attention sub-layer to avoid this attention sub-layer looking into the future.
 
 
 \section{Faster R-CNN}
@@ -134,7 +134,7 @@ The advantages of VGG:
 The disadvantages of VGG:
 
 \begin{itemize}
-	\item VGG consumes more computing resources and uses more parameters, resulting in more memory usage. Most of the parameters are from the first fully connected layer. VGG has 3 fully connected layers!
+	\item VGG consumes more computing resources and uses more parameters, resulting in more memory usage. Most of the parameters are from the first fully connected layer. VGG has 3 fully connected layers.
 \end{itemize}
 
 
@@ -155,8 +155,8 @@ ROI Align does not need to perform rounding operations like ROI pooling. If the 
 \begin{enumerate}[1.]
 	\item Divide the bbox area into equal parts according to the size required by the output. It is likely that the vertices will not fall on the real pixels after the equal division.
 	\item If the vertices do not fall on the real pixel points after equal division, then take a fixed 4 points in each bin, which is the blue point on the right side of Figure~\ref{fig:roialign}.
-	\item For each blue point, the value of the 4 nearest real pixel points is weighted (bilinear interpolation) to obtain the value of this blue point
-	\item  4 new values are calculated in a bin, and max is selected from these new values as the output value of this bin Therefore we use bilinear interpolation to predict its value.
+	\item For each blue point, the value of the 4 nearest real pixel points is weighted (bilinear interpolation) to obtain the value of this blue point.
+	\item  Four new values are calculated in a bin, and max is selected from these new values as the output value of this bin Therefore we use bilinear interpolation to predict its value.
 	\item Get the final 2x2 output.
 \end{enumerate}
 
@@ -167,11 +167,11 @@ The DETR discards the traditional Faster R-CNN ROI-based object detection method
 	\centering
 	\includegraphics[width = 1 \textwidth]{figures/DETR.png}
 	\caption[The framework of DETR model]
-	{ The framework of DETR model. Figure obtained from ~\cite{carion2020end}}
+	{ The framework of DETR model. Figure obtained from ~\cite{carion2020end}.}
 	\label{fig:detr}
 \end{figure}
 
-The network structure of DETR is very simple (see in Fig.~\ref{fig:detr}.). It is divided into three parts: the first part is a traditional CNN to extract image features to higher dimensions. The second part is a Transformer Encoder and Decoder to extract the object features. Finally, the Bipartite matching loss is used to Train the network. 
+The network structure of DETR is very simple (see Fig.~\ref{fig:detr}.). It is divided into three parts: the first part is a traditional CNN to extract image features to higher dimensions. The second part is a Transformer Encoder and Decoder to extract the object features. Finally, the Bipartite matching loss is used to Train the network. 
 
 \subsection{Transformer Encoder}
 
@@ -193,14 +193,32 @@ In addition, a fixed-size learnable object query is designed in DETR, which defi
 
 
 \subsection{Bipartite matching loss}
-
+\label{sec:matchingloss}
 Previously, the detector used the anchor and ground truth IoU to determine the positive and negative samples,  while DETR used bipartite matching loss to determine the positive and negative samples. 
 
 \begin{equation}
 	\hat{\sigma}=\underset{\sigma \in \mathfrak{G}_{N}}{\arg \min } \sum_{i}^{N} \mathcal{L}_{\text {match }}\left(y_{i}, \hat{y}_{\sigma(i)}\right)
 \end{equation}
 
-Where $ \mathcal{L}_{\text {match }} $ is the pair-wise matching cost between ground true and predicted bounding boxes. Through one-by-one pairing, there is no need to adopt traditional NMS, because a bounding box can only be matched with a ground true, which will inevitably introduce loss. The algorithm implementation uses the Hungarian algorithm.
+where $ \mathcal{L}_{\text {match }} $ is the pair-wise matching cost between ground true and predicted bounding boxes. Through one-by-one pairing, there is no need to adopt traditional NMS, because a bounding box can only be matched with a ground true, which will inevitably introduce loss. The algorithm implementation uses the Hungarian algorithm.
+
+DETR obtain the predicted distributions of classes and bounding boxes through two different feed forward networks(FFN). Let us denote by $ y $ the ground truth set of objects, and $  \hat{y}= \{ \hat{y}_i\} ^N_{i=1} $ the set of $ N  $predictions.To find a bipartite matching between these two sets we search for a permutation of $ N $ elements $sigma \in \Theta _N $ with the lowest cost:
+\begin{equation}\label{equ:matcher}
+	\hat{\sigma} = \underset{\sigma \in \Theta _N }{argmin} \sum_{i}^{N} \mathcal L_{match} (y_i,\hat{y}_{\sigma(i)})
+\end{equation}
+
+where $\mathcal L_{match} (y_i,\hat{y}_{\sigma(i)})$ is a pair-wise matching cost between ground truth $ y_i $ and a prediction with index $ \sigma(i) $.
+
+Then we use the \textit{Hungarian loss }in DETR~\cite{carion2020end} to calculate the loss function:
+\begin{equation}\label{equ:hungarianloss}
+	\begin{aligned}
+		&\mathcal L_{Hungarian}(y,\hat{y} ) = \sum^{N}_{i=1}[-\log{\hat{p}_{\hat{\sigma}(i)}(c_i)} + \mathbb{I}_{\{c_i \ne  \varnothing \}}\mathcal{L}_{box}(b_i,\hat{b}_{\hat{\sigma}(i)})   ], \\
+		&wehre \\
+		&\mathcal{L}_{box}(b_i,\hat{b}_{\hat{\sigma}(i)}) = \lambda_{iou}\mathcal{L}(b_i,\hat{b}_{\sigma(i)}) + \lambda_{L1}\left \| b_i - \hat{b}_{\sigma (i)}  \right \| _1
+	\end{aligned}
+\end{equation}
+
+where $ \hat{\sigma} $ is the optimal assignment computed in the Equ.~\ref{equ:matcher}. we define probability of class $ c_i $ as $ \hat{p}_{\hat{\sigma}(i)}(c_i)$ and the predicted box as $ \hat{b}_{\sigma(i)} $. we use a linear combination of a negative log-likelihood for class prediction and a linear combination of the $  l_1  $ loss and the generalized IoU~\cite{rezatofighi2019generalized} loss for the box prediction.
 
 \subsubsection{Hungarian matching }
 
@@ -216,19 +234,14 @@ Hungarian matching is binary matching using the Hungarian algorithm, it is also 
 The basic steps of the Hungarian algorithm are as follows:
 \begin{enumerate}[1.]
 	\item Subtract the smallest entry in each row from all the other entries in the row. This will make the smallest entry in the row now equal to 0.
-	\item Subtract the smallest entry in each column from all the other entries in the column. This will make the smallest entry in the column now equal to 0
+	\item Subtract the smallest entry in each column from all the other entries in the column. This will make the smallest entry in the column now equal to 0.
 	\item Draw lines through the row and columns that have the 0 entries such that the fewest lines possible are drawn.
 	\item  If there are nn lines drawn, an optimal assignment of zeros is possible and the algorithm is finished. If the number of lines is less than nn, then the optimal number of zeroes is not yet reached, then go to the next step.
-	\item Find the smallest entry not covered by any line. Subtract this entry from each row that is not  crossed out, and then add it to each column that is crossed out. Then, go back to Step 3.
+	\item Find the smallest entry not covered by any line. Subtract this entry from each row that is not  crossed out, and then add it to each column that is crossed out. Then, go back to $ 3^{rd} $Step.
 \end{enumerate}
 
-The loss calculation in DETR includes classification loss and box regression loss:
 
-\begin{equation}
-	\mathcal{L}_{\text {Hungarian }}(y, \hat{y})=\sum_{i=1}^{N}\left[-\log \hat{p}_{\hat{\sigma}(i)}\left(c_{i}\right)+\mathbb{1}_{\left\{c_{i} \neq \varnothing\right\}} \mathcal{L}_{\text {box }}\left(b_{i}, \hat{b}_{\hat{\sigma}}(i)\right)\right]
-\end{equation}
 
-The regression loss $ \mathcal{L}_{\text {box }} $ does not calculate \textit{no object}, and the regression loss $ \mathcal{L}_{\text {box }} $ includes $  L_1 $ loss and GIoU loss.
 
 \subsubsection{IoU and GIoU}
 
@@ -300,7 +313,7 @@ L(r_a,r_p,r_n)=max(0,m+d(r_a,r_p)-d(r_a,r_p))
 	\centering
 	\includegraphics[width = 0.8\textwidth]{figures/triplet_loss_faces.png}
 	\caption[Example of a triplet ranking loss ]
-	{ Example of a triplet ranking loss setup to train a net for image face verification. In this setup, the weights of the CNNs are shared. We call it triple nets. (Image source:~\cite{triplet_loss_em}.)}
+	{ Example of a triplet ranking loss setup to train a net for image face verification. In this setup, the weights of the CNNs are shared. We call it triple nets. (Image source:~\cite{triplet_loss_em}).}
 	\label{fig:triplet_ranking_loss}
 \end{figure}
 

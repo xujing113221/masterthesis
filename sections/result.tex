@@ -15,19 +15,19 @@ However, the original Visual Genome has the problems such as overlapping boundin
 	\label{fig:predicates}
 \end{figure}
 
-Figure~\ref{fig:predicates} is the predicate distribution in the data set we selected. We can conclude that the train data set and the test data set have the same predicate distribution.
+Figure~\ref{fig:predicates} is the predicate distribution in the data set we used, which shows that the train data set and the test data set have the same predicate distribution.
 
 \section{Evaluation Metrics}
 
 
-Visual relationship detection involves object classification, localization and predicate prediction. As we mentioned before, the vrd problem has three tasks, and each task has different input information:
+Visual relationship detection involves object classification, localization and predicate prediction. As we mentioned before, the VRD problem has three settings, and each setting has different input information:
 
 \begin{enumerate}[\qquad  $\bullet$]
-\item Predicate Classification(\textbf{predcls}): The input is an image and a set of objects with their object classes and bounding boxes. The classes and locations of the objects are known. The model predicts the matching of subject-object pairs and their predicates.
+\item Predicate Classification(\textbf{PredCLS}): The input is an image and a set of objects with their object classes and bounding boxes. The classes and locations of the objects are known. The model predicts the matching of subject-object pairs and their predicates.
 
-\item Scene Graph Classification(\textbf{sgcls}): The input is an image and a set of objects with their boun- ding boxes. The classes of the objects are unknown. The model classifies the objects and predicts the matching of subject-object pairs and their predicates.
+\item Scene Graph Classification(\textbf{SGCLS}): The input is an image and a set of objects with their boun- ding boxes. The classes of the objects are unknown. The model classifies the objects and predicts the matching of subject-object pairs and their predicates.
 
-\item Scene Graph Detection(\textbf{sgdet}): The input is an image. The output involves the classes of the subjects and objects, the predicates of each subject-object pairs and the bounding boxes of each subject and object which have at least 0.5 overlap with the bounding boxes in ground truth.
+\item Scene Graph Detection(\textbf{SGDET}): The input is an image. The output involves the classes of the subjects and objects, the predicates of each subject-object pairs and the bounding boxes of each subject and object which have at least 0.5 overlap with the bounding boxes in ground truth.
 \end{enumerate}
 
 In our experiment, due to the incomplete annotation of the true relationship, we use the relationship detection $ Recall@K $ as an evaluation indicator, which measures the scores of the true relationship triples in the top K most reliable triple predictions that appear in the image.
@@ -125,13 +125,13 @@ Figure~\ref{fig:singlepixelmap} shows the attention map of a single pixel after 
 	\label{fig:singlepixelmap}
 \end{figure}
 
-As shown in Figure~\ref{fig:singlepixelmap_a}, we randomly select three pixels from subject \textit{arm} and drew their attention weights map for the entire image, the red box is the subject \textit{arm} and the yellow box is the object\textit{ man}, and the ground truth relation is \textit{arm on man}. In the picture, the most highlights are in the yellow box, which means that these pixels of the subject focus more on the object \textit{man}. Although the loss function performs well in figure (a), it works not well with the other picture, such as the figure (b), (c), (d).
+As shown in Figure~\ref{fig:singlepixelmap_a}, we randomly select three pixels from subject \textit{arm} and drew their attention weights map for the entire image, the red box is the subject \textit{arm} and the yellow box is the object\textit{ man}, and the ground truth relation is \textit{arm on man}. In the picture, the most highlights are in the yellow box, which means that these pixels of the subject focus more on the object \textit{man}. Although the loss function performs well in Figure (a), it works not well with the other picture, such as the Figure (b), (c), (d).
 
 In Figure~\ref{fig:singlepixelmap_b}, the subject is \textit{bike}, and the object is \textit{wheel}. We also select three pixels from the subject and draw their attention maps. In the three attention maps, most of the highlights are out of the yellow box, which means that the pixels of subject \textit{bike} pays little attention the object \textit{wheel}, and from the distribution of the highlights it can be find that the pixels pay more attention to the rest part of the subject \textit{bike}.
 
 In Figure~\ref{fig:singlepixelmap_c}, the subject is \textit{window}, and the object is \textit{door}. In the attention maps, the pixels of  \textit{window} pay nor attention to the subject or the object. They focus on the lamps, which has no relation with the subject \textit{window}.
 
-The attention maps of figure~\ref{fig:singlepixelmap_d} shows that some pixels of subject \textit{zebra} focus on the subject and some of them focus on the parts of the image except the subject and object.
+The attention maps of Figure~\ref{fig:singlepixelmap_d} shows that some pixels of subject \textit{zebra} focus on the subject and some of them focus on the parts of the image except the subject and object.
 
 After analyzing the result of the experiments, it comes to a conclusion that this loss function performs not well. With this loss function, most $ \forall Att_i^{rel} $ are not able to reflect the relation between subjects and objects. The results show that most of subjects can not pay attention to the right objects, they focus more on themselves or the parts that has no relation to them.
 
@@ -160,9 +160,9 @@ After analyzing the result of the experiments, it comes to a conclusion that thi
 
 In order to find the cause of the above problem, the complete attention map of the Fig.~\ref{fig:motor_img} is drawn in Figure~\ref{fig:motor_attention_map}. It can be seen from the figure that the overall distribution of $ \forall Attention_{p^i_{img} \to p^j_{img}} , p^i_{img},p^j_{img} \in \mathbb{P}_{img} $ is still relatively uniform, and it is not intuitive to distinguish which objects have a relationship. It can only indicate that the loss function has changed the attention map, but this change has no benefits to the relationship detection.
 
-Then Fig.~\ref{fig:motor_pair}  shows the position about the attention weights set for each relation pair. Figure(d) shows the position of $ \forall Attention_{p^i_{man} \to p^j_{bike}} $ ,  $ \forall Attention_{p^i_{man} \to p^j_{bike}} \in \forall Att_{rel} $ in the attention map. Because the whole bike is the ground truth object, the loss function should increase its attention weights. While the white areas in Figure(e) and Figure (f) belong to $ \forall Att_{no\_rel} $, which means that the man and wheels have no intersection in this scene, the loss function should lower its attention weights.
+Then Figure~\ref{fig:motor_pair}  shows the position about the attention weights set for each relation pair. Figure(d) shows the position of $ \forall Attention_{p^i_{man} \to p^j_{bike}} $ ,  $ \forall Attention_{p^i_{man} \to p^j_{bike}} \in \forall Att_{rel} $ in the attention map. Because the whole bike is the ground truth object, the loss function should increase its attention weights. While the white areas in Figure(e) and Figure (f) belong to $ \forall Att_{no\_rel} $, which means that the man and wheels have no intersection in this scene, the loss function should lower its attention weights.
 
-In the figure, the subject is \textit{man} and the objects are \textit{bike}, \textit{$ wheel_1 $}, \textit{$ wheel_2 $}. In Figure 5.4 (a)(b)(c) , \textit{$ wheel_1 $} and \textit{$ wheel_2 $} belong to \textit{bike}, and there is overlap between bike and wheels.It causes that the sets of attention weights for these three relation pairs also have overlap,  so this loss function cannot highlight the attention weights of $ \forall Attention_{p^i_{man} \to p^j_{bike}} $ while reducing the attention weights of  $ \forall Att_{no\_rel} $.
+ In Figure~\ref{fig:motor_pair}(a)(b)(c), the subject is \textit{man} and the objects are \textit{bike}, \textit{$ wheel_1 $}, \textit{$ wheel_2 $}, \textit{$ wheel_1 $} and \textit{$ wheel_2 $} belong to \textit{bike}, and there is overlap between bike and wheels. It causes that the sets of attention weights for these three relation pairs also have overlap, so this loss function cannot highlight the attention weights of $ \forall Attention_{p^i_{man} \to p^j_{bike}} $ while reducing the attention weights of  $ \forall Att_{no\_rel} $.
 
 This overlap is so serious and in Figure~\ref{fig:overlap} there is an example analyze.The white area in Figure~\ref{fig:overlap}(a) is the position of set of all relation pairs$ Att_{rel} $  about the image in the attention map, and the white area in Figure~\ref{fig:overlap}(b)  are position of the set of all no relation pairs $ Att_{no\_rel} $.When we calculate the overlap between $Att_{rel} $ and  $Att_{no\_rel} $, we can find that the white area of Figure(b) is contained in the white area of Figure(a). It can be expressed as  $$ \forall Att^i_{rel} \cap  \forall Att^i_{no\_rel } = \forall Att^i_{rel}  $$ or $$ \forall Att^i_{rel}  \subseteq  \forall Att^i_{no\_rel }$$.
 
@@ -249,25 +249,26 @@ This  overlap is not a special case, almost all pictures have this problem, so t
 
 \section{Experiments on Proposed Framework}
 
-As mentioned above, our Pixel Attention idea did not meet our expectations due to the overlap. In this section, we introduce in detail the relevant experiments and results of our Retina Net.
+As mentioned above, our Pixel-based Attention idea was not able to meet our expectations due to the overlap, so we modified the model and designed Retina net.  
+In this section, we introduce in detail the relevant experiments and results of Retina Net, including experiments on box query, attention map, relation decoder, as well as the parameter adjustment of the transformer, and the final result comparison.
 
 \subsection{Implementation details}
-We have implemented our model in $ pythorch\-0.4 $~\cite{paszke2019pytorch}. The input of our model is the same as~\cite{zellers2018neural} , that is an image with a size of $ 592 \times 592 $. We have used VGG16~\cite{simonyan2015deep} backbone pretrained on visual genome dataset. As mentioned in our Sec.~\ref{sec:retinanet}, the encoder and the two decoder modules accept input features of size 2048. We have used 3x Encoder, 3x Object Decoder , 3x Relation Decoder and 8 attention head for transformer network. The glove vector embedding has size 200. SGD with momentum along with learning rate of $ 10^{-3 }$ and our batch size is 6. Also, we have used cross-entropy loss for both of our object and relation classification loss.
+ The model is implemented in $ pythorch\-0.4 $~\cite{paszke2019pytorch}. The input of the model is the same as Motifs-Net~\cite{zellers2018neural} , that is an image with a size of $ 592 \times 592 $. VGG16~\cite{simonyan2015deep} backbone pretrains the Visual Genome~\cite{krishna2017visual} dataset. As mentioned in  Sec.~\ref{sec:retinanet}, the encoder and the two decoder modules accept input features of size 2048. There are 3x Encoder, 3x Object Decoder , 3x Relation Decoder and 8 attention heads for transformer network. The GloVe vector embedding has size 200. SGD with momentum along with learning rate of $ 10^{-3 }$ and the batch size is 6. And cross-entropy loss function is adopted to compute the object and relation classification loss.
 
-We follow three standard evaluation modes same as in current benchmark of the Motifs-Net ~\cite{zellers2018neural}  : (1) \textbf{predicate classification} (PREDCLS): given a ground truth set of boxes and labels, predict relationship labels, (2) \textbf{scene graph classification} (SGCLS): given ground truth boxes, predict box labels and relationship label and (3) \textbf{scene graph detection} (SGDET): predict boxes, box labels, and relationship labels.
-For the subtask SGDET, we use a learnable object query, and use the Hungarian matching algorithm to match each object feature. For the other two subtasks, we use our custom object query to obtain the object feature.
+ We have followed three standard evaluation modes same as in current benchmark of the Motifs-Net~\cite{zellers2018neural} : (1) \textbf{predicate classification} (PredCLS): given a ground truth set of boxes and labels, predict relationship labels, (2) \textbf{scene graph classification} (SGCLS): given ground truth boxes, predict box labels and relationship label and (3) \textbf{scene graph detection} (SGDET): predict boxes, box labels, and relationship labels.
+%For the  SGDET, we use a learnable object query, and use the Hungarian matching algorithm to match each object feature. For the other two subtasks\textbf{(setting)}, we use our custom object query to obtain the object feature.
 
 
-\subsection{Experiment on Object query}
+\subsection{Experiment on Object Decoder}
 
-We will discuss the feasibility of our proposed object query to replace learnable query. The task PredClS has classes and bounding boxes information, so we designed several object queries based on the known information, as shown in Fig.~\ref{fig:objectquery}, Fig.~\ref{fig:objquery1} and Fig.~\ref{fig:objquery2}. We call them  \textit{objec query 1} ,  \textit{objec query 2} , and  \textit{objec query 3}  respectively. We will discuss their pros and cons, and their substitutability.
+The feasibility of our proposed object query to replace learnable query should be analyzed. The  PredCLS has classes and bounding boxes information, so we designed several object queries based on the known information, as shown in Fig.~\ref{fig:objectquery}, Fig.~\ref{fig:objquery1} and Fig.~\ref{fig:objquery2}. They are called  \textit{objec query 1} ,  \textit{objec query 2} , and  \textit{objec query 3}  respectively. Their pros and cons, and their substitutability are discussed  as follows.
 
-We have already mentioned object query 1 above, it has the spatial information of the entity, while the object query 2 is to add a class word embedding on his basis, so that our object query has semantic information. For the object query 3, we only made a simple design. The bounding box of each entity in a picture is different, so their object query is also different.
+The object query 1 mentioned in Sec.~\ref{sec:objectdecoder} has the spatial information of the entity, while the object query 2 is to add a class word embedding on its basis, so that our object query has semantic information. And object query 3 is obtained by a simple linear layer from the bounding box. Each entity in the picture has its own object query, because the object query depends on the bounding box.
 
 \begin{figure}[tbph!]
 	\centering
 	\includegraphics[width=0.8\linewidth]{figures/obj_query1}
-	\caption[Illutrastion of the object query 2]{Illutrastion of the object query 2. Compared with object query1, we integrate the semantic feature of objects.}
+	\caption[Illutrastion of the object query 2]{Illutrastion of the object query 2. Compared with object query1 in Fig.~\ref{fig:objquery1}, it integrate the semantic feature of objects.}
 	\label{fig:objquery1}
 \end{figure}
 
@@ -280,11 +281,12 @@ We have already mentioned object query 1 above, it has the spatial information o
 
 \subsubsection{Consistency of the Object Query }
 
-When people use a learnable embedding vector as the query, such as detr, they need to use the Hungarian matching algorithm to find the most matching object feature, because their query has no actual physical meaning. And our object query contains relevant information of each object, such as spatial information and semantic information. He is in one-to-one correspondence with the entities in the picture.
+DETR uses a learnable embedding vector as the query,and it utilizes the Hungarian matching algorithm to find the most matching object feature, because their queries have no actual physical meaning, and the queries are fixed for each picture and cannot establish a direct connection with the actual object.%且对于每一张图片他都是固定的，无法与实际的object 建立直接的联系。
+However,since our object query contains relevant information of each object, such as spatial information and semantic information, it is in one-to-one correspondence with the entities in the picture.
 
-In order to verify the correspondence between our object query and the entity in the picture, we designed a regression experiment: we add an Multilayer Perceptron(MLP) module after ours object query and object feaure, then observe whether they can regain the spatial information of the object. We use IoU and GIoU~\cite{rezatofighi2019generalized}  as evaluation metrics.
+In order to verify the correspondence between the object query and the entity in the picture, a box regression is designed in the experiment. After the object query and object feaure, two Multilayer Perceptron(MLP) modules are separately added, and then observe whether they can regain the spatial information of the object.For the evaluation metrics, IoU and GIoU~\cite{rezatofighi2019generalized} are used .
 
-After the MLP we obtain a bounding box tenser $ \hat{b_\sigma} $, then we calculate the box loss $\mathcal{L}_{box}$ with ground truth bounding box $b$, it consists of a GIoU loss and a $l_1$ loss, see the following equation:
+After the MLP, a bounding box vector $ \hat{b_\sigma} $ is obtained, then the box loss $\mathcal{L}_{box}$can be calculated with ground truth bounding box $b$. The box loss consists of a GIoU loss $  \mathcal{L}_{GIoU} $ and a $l_1$ loss, see the following equation:
 
 $$ \mathcal{L}_{box}(b,\hat{b}_{\hat{\sigma}}) = \mathcal{L}_{GIoU}(b,\hat{b}_{\sigma}) + \left \| b - \hat{b}_{\sigma}  \right \| _1 $$
 
@@ -294,22 +296,20 @@ $$ \mathcal{L}_{box}(b,\hat{b}_{\hat{\sigma}}) = \mathcal{L}_{GIoU}(b,\hat{b}_{\
 		\bottomrule
 		& object query 1 & object query 2 & object query 3  \\ \midrule
 		IoU  & 0.759  & 0.750  & 0.681    \\
-		GIoU & 0.744  & 0.733 & 0.669   \\ \bottomrule
+		GIoU & 0.744  & 0.733 & 0.669   \\ \midrule
 		&object feature 1  &object feaure 2 & object feautre 3\\ \midrule
 		IoU & 0.634 & 0.631 & 0.580 \\
 		GIoU	& 0.617 & 0.620 & 0.568  \\\bottomrule
 		
 	\end{tabular}
-\caption[The regression result of the object query and feature]{The regression result of the object query and feature.}
+\caption[The regression result of the object query and feature]{The regression result of the object queries and features.}
 \label{tab:regresstion}
 \end{table}
 
-We can summarize from Tab~\ref{tab:regresstion} that our object query corresponds to object, and the IoU can reach about 75\%., and its  generated features also have about 60\%  IoU.
+Table~\ref{tab:regresstion} shows that the IoU of object queries can reach 0.75 and the IoU of object features averages 0.6. This verifies that there is a one-to-one correspondence between all three object queries and objects, and the object query 3 is slightly worse than the others.
 
-\subsubsection{Visualization of our object query}
-Our object query is a $ 64 \times 256 $ tensor, corresponding to objects in each image, so we can draw each object query into a size of $16 \times 16$ image, see Fig.~\ref{fig:tennis} and Fig.~\ref{fig:street}. 
-
-From the figure, we can see that we have generated three different queries through three different methods, and the query corresponding to each object is also different. For example, our object query1, as the area of our entities gradually increases, our query gradually becomes denser. 
+\subsubsection{The comparison of object queries}
+The object query is a $ 64 \times 256 $ matrix, corresponding to the objects in each image, so  each object query can be reshaped into a size of $16 \times 16$ image. Fig.~\ref{fig:tennis}  shows that three different queries are generated through three different methods, and the query corresponding to each object is also different. For example, in Figure(b), as the area of our entities gradually increases, the query gradually becomes denser. 
 
 
 \begin{figure}[h!]
@@ -387,12 +387,12 @@ From the figure, we can see that we have generated three different queries throu
 	\includegraphics[width=0.9\linewidth]{figures/result/street/q2_4}
 	\end{minipage}}
 
-	\caption[An instance of Visualized results of the object query]{An instance of visualized results of the object query.from top to bottom, each row represents the position of the object, object query 1, object query 2 and object query 3.}
+	\caption[An instance of Visualized results of the object query]{An instance of visualized results of the object query. From top to bottom, each row represents the position of the object, object query 1, object query 2 and object query 3.}
 	\label{fig:tennis}
 \end{figure}
 
-\subsubsection{Result of our object query}
-Next, we use our object query as the input of the object decoder to test the performance of these three queries in the task PredCLS, and we use recall@50 and recall@100 as the criterion.We can see the results in Table~\ref{tab:result_object _query}.
+ % 不同的object query的效果
+Next, the object queries are fed into the object decoder to test their performance in the PredCLS, and recall@50 and recall@100 as the evaluation metrics. The results are in Table~\ref{tab:result_object _query}.
 
 \begin{table}[!h]
 	\centering
@@ -407,30 +407,52 @@ Next, we use our object query as the input of the object decoder to test the per
 \label{tab:result_object _query}
 \end{table}
 
-According to the above table, the performance of the three object queries in PredCLS is similar. Based on the previous results, we draw the following conclusions:
+According to the above table,  the conclusions as follows:
 
 \begin{enumerate}
 	\item The object query and object feature we designed correspond to each other, which can replace learnable query and solve the VRD problem.
-	\item Different object query designs are not very helpful to the VRD problem. We only need to design a query that can distinguish each object, that is, each query needs to correspond to each entity one by one.
+	\item The performance of the three object queries in PredCLS is similar. So it only need to design a query that can distinguish objects, that is, each query needs to correspond to a unique entity. 
 \end{enumerate}
 
+\subsubsection{Experiment on Object Context}
+In order to obtain more information that is conducive to predicate prediction, the object context is designed to obtain the interaction between objects. It contains a global context of an object to all objects. Predicate prediction itself is to detect the interaction between objects, so a context that can indicate the interaction information between them is very necessary. Remove $ context_{obj }$ in the predicate classifier and compare the formula ~\ref{equ:predicatd}  and ~\ref{equ:predicatc} to detect the effect of object context on Predicate Classification.
+% 为了获取更多有利于谓语预测的信息，我们设计了object context，去获得object 之间的交互，它包含了一个object 对所有object的上下文关系。谓语预测本身就是检测object间的交互，所以一个能表明他们之间的交互信息的context是十分必要的。在predicate classifier中去掉 $ context_{obj }$ 使用如下公式~\ref{equ:predicatd}与公式~\ref{equ:predicatc}进行对比，检测object  context 对Predicate Classification的作用效果。
+
+\begin{equation}
+	score'_{pred}(i,j) = Linear(concat(feat_{obj}^i, context_{rel}^{ij}, feat_{obj}^j)
+	\label{equ:predicatd}
+\end{equation}
+
+\begin{table}[]
+	\centering
+	\begin{tabular}{c|lcc}
+		\hline
+		\multirow{2}{*}{}      & \multicolumn{3}{l}{Predicate Classification}  \\ \cline{2-4} 
+		& R@20          & R@50          & R@100         \\ \hline
+		without object context & 51.7          & 59.6          & 62.3          \\
+		with object context    & \textbf{55.4} & \textbf{63.4} & \textbf{64.4} \\ \hline
+	\end{tabular}
+\caption[The impact of object context on PredCLS]{The impact of object context on PredCLS.}
+\label{tab:object context}
+\end{table}
+As shown in Table~\ref{tab:object context}, the object context has great benefits for the predicate prediction, especially the improvement of recall@20 is the most obvious, with an improvement of 3.7. This verifies the effect of global context between objects on predicate prediction.% 通过上表，可是肯定object context 对谓语预测的有很大帮助，尤其是recall@20的提高最为明显，有3.7的提升。这验证的global context between objects 对谓语预测的作用。
 
 \subsection{Experiment on Attention  Loss Function}
 
-We designed an attention loss to make our object feature better. In this part, we designed some experiments to verify its effect.
+An attention loss is designed to make the object feature better and some experiments are performed to verify it.
 
-The Figure~\ref{fig:attention_loss_result} is the training result of our attention loss. We record a loss every 100 step, sum up 1000 data, and use matlab to perform low-pass filtering to draw the result. We found that our attention from the beginning $ 10^{-4} $ dropped rapidly and gradually tended to 0 in the process of about 500 steps.
+The Figure~\ref{fig:attention_loss_result} is the training result of the attention loss. We record a loss every 100 steps, summing up 1000 data, and use Matlab to perform low-pass filtering to draw the result. It is showed that the attention from the beginning $ 10^{-4} $ dropped rapidly and gradually tended to 0 after 500 steps.
 
-\begin{figure}[h]
+In the object decoder in our model in Fig.~\ref{fig:objectdecoder}, when the feature of the object is obtained, it will be accompanied by the corresponding attention map. Its size is $ 64\times1369 $, corresponding to each object, it is reshaped into a size of $ 37\times37 $ object attention map. As shown in Fig.~\ref{fig:train_attention_loss} and Fig.~\ref{fig:bus}. The first and second image are selected in our test data set, and the object bounding boxes and their attention maps (with and without attention loss) are drawn.
+
+\begin{figure}[H]
 	\centering
-	\includegraphics[width=0.8\linewidth]{figures/result/attention_loss}
+	\includegraphics[width=0.7\linewidth]{figures/result/attention_loss}
 	\caption[Training result of the Attention Loss]{Training result of the Attention Loss.}
 	\label{fig:attention_loss_result}
 \end{figure}
 
-In the object decoder in our model in Fig.~\ref{fig:objectdecoder}, we will obtain the corresponding attention map when we get the object feature. Its size is $ 64\times1369 $, corresponding to each object, we draw it into a size of $ 37\times37 $ object attention map. As shown in Fig.~\ref{fig:train_attention_loss} and Fig.~\ref{fig:bus}.We selected the first and second image in our test data set, and drew the object bounding boxes and their attention maps (with and without attention loss).
-
-We can find that our attention has a very good effect on the attention map. Without attention loss, the attention map is messy. As shown in Fig.~\ref{fig:train_attention_loss}(b), we can clearly see the position and shape of the train, and even better express the position of the train than the bounding box. And the area in other parts of the picture is shown in blue, the background is very clean, highlighting the attention weight of our object, making our decoder pay more attention to this object.
+It can be seen that the attention loss performs successfully on the attention map. Without attention loss, the attention map is messy. As shown in Fig.~\ref{fig:train_attention_loss}(b), the position and shape of the train can be distinguished well in the attention map, and it even express the position of the train better than the bounding box. The background area of the picture is blue, and the background color in the picture is very uniform, which makes the attention weight of the object very obvious. It means the object decoder pays more attention to this object.
 
 \begin{figure}[H]
 	\centering
@@ -498,7 +520,7 @@ We can find that our attention has a very good effect on the attention map. With
 			\includegraphics[width=0.9\linewidth]{figures/result/train/no4}
 	\end{minipage}}
 	
-	\caption[The visualization of our attention loss of the first image in the test dataset]{The visualization of our attention loss of the first image in the test dataset.The first column is the object bounding box, the second column is the visualization result of the attention map when we use the attention loss, and the third column is the visualization result of the attention map without our attention loss.}
+	\caption[The visualization of our attention loss of the first image in the test dataset]{The visualization of our attention loss of the first image in the test dataset. The first column is the object bounding box, the second column is the visualization result of the attention map when we use the attention loss, and the third column is the visualization result of the attention map without our attention loss.}
 	\label{fig:train_attention_loss}
 \end{figure}
 
@@ -571,9 +593,10 @@ We can find that our attention has a very good effect on the attention map. With
 			\includegraphics[width=0.9\linewidth]{figures/result/bus/no4}
 	\end{minipage}}
 	
-	\caption[The visualization of our attention loss of the second image in the test dataset]{The visualization of our attention loss of the second image in the test dataset.The first column is the object bounding box, the second column is the visualization result of the attention map when we use the attention loss, and the third column is the visualization result of the attention map without our attention loss.}
+	\caption[The visualization of our attention loss of the second image in the test dataset]{The visualization of our attention loss of the second image in the test dataset. The first column is the object bounding box, the second column is the visualization result of the attention map when we use the attention loss, and the third column is the visualization result of the attention map without our attention loss.}
 	\label{fig:bus}
 \end{figure}
+
 
 \begin{table}[!h]
 	\centering
@@ -584,66 +607,57 @@ We can find that our attention has a very good effect on the attention map. With
 		without our attention  loss & 53.9      & 61.8       & 64.0       & 25.7     & 30.7     & 31.4   \\
 		with our attention loss     & 55.4       & 63.3       & 65.2        & 28.4      & 32.7      &33.6     \\ \bottomrule
 	\end{tabular}
-
-\caption[The result of attention loss in PredCLS and SGCLS]{The result of attention loss in PredCLS and SGCLS.}
-\label{tab:result_attetnion_loss}
+	
+	\caption[The result of attention loss in PredCLS and SGCLS]{The result of attention loss in PredCLS and SGCLS.}
+	\label{tab:result_attetnion_loss}
 \end{table}
 
-According to Table~\ref{tab:result_attetnion_loss}, we can know: our attention loss has got a better object feature. In predcls we have an improvement of about 0.1, and in sgcls our improvement is even greater by about 0.2.
 
-Based on the above results, we get the following conclusions:
+According to Table~\ref{tab:result_attetnion_loss}, in PredCLS R@50 has an improvement of about 0.1, and in SGCLS it is even greater by about 0.2.
+
+Based on the above results, the conclusion is as follows  :
 \begin{enumerate}
 	\item Our attention loss can effectively change the attention map so that it can be well visualized and can show the position and shape of each object.
-	\item Our attention loss can get a better object feature, so as to better solve the vrd problem.
+	\item Our attention loss can get a better object feature, so as to better solve the VRD problem.
 \end{enumerate}
 
 \subsection{Experiment on Relation Deocder}
-In this section, we conducted experiments on the relation decoder. We designed the relation query. Based on the results of the previous object query, we designed a different relation query, and made our relation context have the spatial information and semantic information of the object.
+In this section,  experiments on the relation decoder are conducted. Based on the results of the previous object query, a different relation query is designed, and it makes our relation context have the spatial information and semantic information of the object.
 
 %In Figure~\ref{fig:relation_d_vis}, we can see that the relationship query we designed has differences between each relationship pair. For example, in the figure (a) represents pair $ <man, pants?>$ and (b) represents pair $ <pant, man> $, their subject and The objects are opposite, but their relations are different. In the figure (c) is relation pair $ <man1, glove> $ and d is $ <man1, man2> $. They have the same subject and different objects, but their relation queries are also significantly different.
 
-In Figure~\ref{fig:relation_attetnion}, We show our context effect through attention between relation and object. When we obtain the relation context through the relation decoder, we also obtain the attention map. Its y-axis represents the relation pair and its x-axis represents the object. We visualize it in the subgraph (c). Our relation pair contains both gt pair and no relation pair. For example, in the picture on the left, we can see that our gt pair $<glass, table> $ has higher attention weight for object \textit{`glass'} and \textit{`table'} than others, it means that this pair pays more attention to these two objects \textit{`glass'} and \textit{`table'}.We also have the same effect for no relation pair. For example, in the attention map on the right,the attention values of the object \textit{ `hair'} and \textit{`glove'} in the pair $<hair, glove> $   is higher than the object \textit{`girl'}.
+In Figure~\ref{fig:relation_attetnion}, the context effect is expressed through attention between relation and object. When the relational context is obtained through the relational decoder, it will be accompanied by an attention map. The sub-figure(c) and (f) are attention map, which y-axis represents the relation pair and its x-axis represents the object. Our relation pair contains both ground truth pair and no relation pair. For example, in sub-figure(a), the ground truth pair $<glass, table> $ has higher attention weight for object \textit{`glass'} and \textit{`table'} than others, which means that this pair pays more attention to the objects \textit{`glass'} and \textit{`table'}. No relation pair has the same effect. For example, in the attention map on the right,the attention values of the object \textit{ `hair'} and \textit{`glove'} in the pair $<hair, glove> $   is higher than the object \textit{`girl'}.
 
-The Table~\ref{tab:result_relation_decoder} is the result of using the realtion decoder in the predcls task. We can know that our relation decoder is very helpful to solve the VRD problem, and the effect is remarkable.
-\begin{table}[!h]
+
+\begin{figure}[!htp]
 	\centering
-	\begin{tabular}{c|ccc}
-		\bottomrule
-		& R@20    & R@50    & R@100      \\ \hline
-		without our relation decoder  loss & 51.1    &58.7      & 61.1    \\
-		with our relation decoder     & 55.4       & 63.3       & 65.2       \\ \bottomrule
-	\end{tabular}
-	
-	\caption[The result of our relation decoder in PredCLS]{The result of our relation decoder in PredCLS.}
-	\label{tab:result_relation_decoder}
-\end{table}
-
-
-\begin{figure}[h!]
-	\centering
-	\subfigure[Scenes with objects and bounding boxes with class labels]{
+	\subfigure[]{
 		\begin{minipage}[t]{5cm}
 			\centering
 			\includegraphics[width=0.7\linewidth]{figures/result/relation_Attention/img1}
-		\end{minipage}
+		\end{minipage}}
+	\subfigure[]{
 		\begin{minipage}[t]{5cm}
 			\centering
 			\includegraphics[width=0.8\linewidth]{figures/result/relation_Attention/rel1}
-		\end{minipage}
+		\end{minipage}}
+	\subfigure[]{
 		\begin{minipage}[t]{5cm}
 			\centering
 			\includegraphics[width=1\linewidth]{figures/result/relation_Attention/att1}
 	\end{minipage}}
 	
-	\subfigure[Grund truth realtion.]{
+	\subfigure[]{
 		\begin{minipage}[t]{5cm}
 			\centering
 			\includegraphics[width=0.7\linewidth]{figures/result/relation_Attention/img2}
-		\end{minipage}
+		\end{minipage}}
+	\subfigure[]{
 		\begin{minipage}[t]{5cm}
 			\centering
 			\includegraphics[width=0.35\linewidth]{figures/result/relation_Attention/rel2}
-		\end{minipage}
+		\end{minipage}}
+	\subfigure[]{
 		\begin{minipage}[t]{5cm}
 			\centering
 			\includegraphics[width=1\linewidth]{figures/result/relation_Attention/att2}
@@ -654,54 +668,86 @@ The Table~\ref{tab:result_relation_decoder} is the result of using the realtion 
 	\label{fig:relation_attetnion}
 \end{figure}
 
+The Table~\ref{tab:result_relation_decoder} is the result of using the relation decoder in the PredCLS. It shows that the relation decoder is very helpful to solve the VRD problem, and the effect is remarkable.
 
-%\begin{figure}[h!]
-%	\centering
-%	\subfigure[]{
-%		\begin{minipage}[t]{3.5cm}
-%			\centering
-%			\includegraphics[width=0.9\linewidth]{figures/result/relation/r1}
-%	\end{minipage}}
-%	\subfigure[]{
-%		\begin{minipage}[t]{3.5cm}
-%			\centering
-%			\includegraphics[width=0.9\linewidth]{figures/result/relation/r2}
-%	\end{minipage}}
-%	\subfigure[]{
-%		\begin{minipage}[t]{3.5cm}
-%			\centering
-%			\includegraphics[width=0.9\linewidth]{figures/result/relation/r3}
-%	\end{minipage}}
-%	\subfigure[]{
-%		\begin{minipage}[t]{3.5cm}
-%			\centering
-%			\includegraphics[width=0.9\linewidth]{figures/result/relation/r4}
-%	\end{minipage}}
-%	
-%	\subfigure[]{
-%		\begin{minipage}[t]{3.5cm}
-%			\centering
-%			\includegraphics[width=0.9\linewidth]{figures/result/relation/q1}
-%	\end{minipage}}
-%	\subfigure[]{
-%		\begin{minipage}[t]{3.5cm}
-%			\centering
-%			\includegraphics[width=0.9\linewidth]{figures/result/relation/q2}
-%	\end{minipage}}
-%	\subfigure[]{
-%		\begin{minipage}[t]{3.5cm}
-%			\centering
-%			\includegraphics[width=0.9\linewidth]{figures/result/relation/q3}
-%	\end{minipage}}
-%	\subfigure[]{
-%		\begin{minipage}[t]{3.5cm}
-%			\centering
-%			\includegraphics[width=0.9\linewidth]{figures/result/relation/q4}
-%	\end{minipage}}
-%	
-%	\caption[An instance of Visualized results of the relation query]{An instance of visualized results of the object query.from top to bottom, each row represents the position of the object, object query 1, object query 2 and object query 3.}
-%	\label{fig:relation_d_vis}
-%\end{figure}
+\begin{table}[!h]
+	\centering
+	\begin{tabular}{c|ccc}
+		\bottomrule
+		& R@20    & R@50    & R@100      \\ \hline
+		without our relation decoder  & 51.1    &58.7      & 61.1    \\
+		with our relation decoder      & \textbf{55.67} & \textbf{63.40} & \textbf{65.41}     \\ \bottomrule
+	\end{tabular}
+	
+	\caption[The result of our relation decoder in PredCLS]{The result of our relation decoder in PredCLS.}
+	\label{tab:result_relation_decoder}
+\end{table}
+
+In Relation Decoder, visual features, spatial features and semantic features are used to express objects, see Figure~\ref{fig:relationdecoder}. In order to verify how to express object features to achieve the best experimental results, the following experiments are conducted:
+
+The visual feature is extracted from the image visual feature by the object decoder, and the spatial feature is extracted from the attention map obtained from the object deocer. The semantic feature $f_{sem}$ is obtained by encoding the category through GloVe~\cite{pennington2014glove}. It can be seen from Table~\ref{tab:relation_object} that if only the object visual feature is used, the result is the worst. The combination of visual feature and semantic feature is better than the result of visual feature and spatial feature. Object feature expressed by visual features, sptial feature and semantic feature has the best effect.
+
+\begin{table}[]
+	\centering
+	\begin{tabular}{c|ccc}
+		\hline
+		\multirow{2}{*}{object feature} & \multicolumn{3}{c}{Predicate Classification}    \\ \cline{2-4} 
+		& R@20           & R@50           & R@100          \\ \hline
+		only visual              & 53.56          & 61.10          & 62.21          \\
+		visual+spatial                   & 54.44          & 61.96          & 63.82          \\
+		visual+semantic                 & 54.76          & 62.73          & 64.35          \\
+		visual + spatial+semantic        & \textbf{55.67} & \textbf{63.40} & \textbf{65.41} \\  \hline
+	\end{tabular}
+	\caption[The effect of the expression of object feature in the relation decoder on the result]{The effect of the expression of object feature in the relation decoder on the result.}%object feature在relation decoder的表达对结果的影响
+	\label{tab:relation_object}
+\end{table}
+
+It can be concluded that the expression of object feature can affect the result of VRD. When the object feature has visual, spatial and semantic information, the effect is best. Therefore, object feature in relation decoder are expressed by visual feature, spatial feautures and semantic feature.
+% 通过上表得出结论，object feature的表达会影响vrd的结果，当object feature 同时具有visual ，spatial 和semantic 信息时，效果最好。所以我们在relation decoder 中用visual feature ，spatial feautures和semantic feature一起表达object feature。
+
+\subsection{The Setting of Transformer }%transformer 模型的调整设置？
+In this thesis, three structures including encoder, object decoder, and relation decoder  contain multi-head attention module. There are two important parameters in multi-head attention should be adjusted, attention layers and attention head.
+%在本论文中使用了encoder，object decoder，relation decoder三种包涵multi-head attention module的结构。在 multi-head attention 中有两个重要的参数，attention layers 和 attention head。我们调整了这两个参数 ：
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{cc|ccc}
+		\hline
+		\multirow{2}{*}{layer} & \multirow{2}{*}{head} & \multicolumn{3}{c}{Predicate Classification} \\ \cline{3-5} 
+		&                       & R@20          & R@50          & R@100         \\ \hline
+		1                      & 4                     & 55.34         & 63.10         & 65.11         \\
+		2                      & 4                     & 55.50         & 63.19         & 65.21         \\
+		3                      & 4                     & 55.51         & 63.25         & 65.25         \\
+		4                      & 4                     & 55.54         & 63.35         & 65.36         \\
+		2                      & 8                     & 55.63         & 63.38         & 65.38         \\
+		3                      & 8                     & \textbf{55.67 }        & \textbf{63.40}         & \textbf{65.41}        \\ \hline
+	\end{tabular}
+\caption[The Setting of Transformer]{The adjustment of attention layer and attention head.} %transformer 参数调节
+\label{tab:transfomerset}
+\end{table}
+
+As shown in Table~\ref{tab:transfomerset}, attention layers and attention head do not have a great influence on predicate prediction.The increase in the number of heads and layers can improve the recall slightly. However, as the parameters of Transformer become larger, the requirements for hardware resources become higher, so according to the conditions,  the multi-head attention module has 3 layers and 8 heads.
+%如表所示，attention layers 和attention head 对谓语预测的影响并不是很大，head越大，layer越大都会稍微提高recall。但是随着参数变大，对硬件资源的要求就越大，所以根据在我们条件准许的情况下我们使用layer 为3 head为8的multi-head attention module。
+
+
+As mentioned in Sec.~\ref{sec:imagefeture}, the model has two image features, one is $  f_{vgg} $ obtained through VGG16, and the other is $ f_{en} $ obtained by $  f_{vgg} $ through multi-head self-attention of the encoder. In order to verify the difference between these two features, switch between different image features by whether to use the encoder or not. When the encoder is used, the model uses $ f_{en} $ , and when the encoder is not used, the model uses $  f_{vgg} $. The results are as follows:
+%在上一章提到，模型会有两个image feature，一个是通过VGG16得到的f_vgg，另一个是将f_vgg送入encoder进行multi head self attention 后得到的f_en。为了验证这两个特征的差别，我们通过是否使用encoder 来切换不同的image feature，当使用encoder 时，模型使用的是f_en，当不实用encoder 时，模型使用的f_vgg.其结果如下：
+
+\begin{table}[]
+	\centering
+	\begin{tabular}{c|cccc}
+		\hline
+		\multirow{2}{*}{} & \multicolumn{2}{c|}{Predicate Classification} & \multicolumn{2}{c}{Scene Graph Classification} \\ \cline{2-5} 
+		& R@50            & \multicolumn{1}{c|}{R@100}  & R@50                   & R@100                 \\ \hline
+		with encoder      & 62.1            & 63.2                        & \textbf{33.7}          & \textbf{34.6}         \\
+		without encoder   & \textbf{63.4}   & \textbf{64.4}               & 32.8                   & 33.4            \\ \hline     
+	\end{tabular}
+	\caption[The effect of encoder on PredCLS and SGCLS]{The effect of the Encoder on PredCLS and SGCLS.} 
+	\label{tab:encoder}
+\end{table}%image feature 的影响Influence of mage feature
+
+For the situation that predicate classification is more suitable without an encoder in Table~\ref{tab:encoder}, $  f_{vgg} $  is more suitable for obtaining predicates, which contains good visual features.The scene graph classification is more suitable for with encoders, and $ f_{en} $ is more suitable for object classification. Due to the above reasons, we adjusted the predicate classification model and no longer use the encoder.
+%从表中对于Predicate Classification更适用于没有encoder的情况，f_vgg更适用于去获取谓语，它包含很好的视觉特征。而Scene Graph Classification 更适用于有encoder，f_en更适合去做object classification。所以我们的模型也对其进行了调整。对于Predicate Classification我们就不使用encoder了。
 
 
 \subsection{Results Comparison}
@@ -720,20 +766,26 @@ In this section we provide the performance of some advanced related works for co
 		FREQ ~\cite{zellers2018neural}                   & 53.6                 & 60.6                 & 62.2                  & 29.3                 & 32.3                 & 32.9                  & 20.1                  & 26.2                 & 30.1                  \\
 		MotifNet~\cite{zellers2018neural}                & 58.5                 & 65.2                 & 67.1                  & 32.9                 & 35.8                 & 36.5                  & 21.4                 & 27.2                 & 30.3                  \\
 		KERN~\cite{chen2019knowledge}                   & -                    & 65.8                 & 67.6                  & -                    & 36.7                 & 37.4                  & -                    & 27.1                 & 29.8                  \\
-		RelDN~\cite{zhang2019graphical}                   & 66.9                 & 68.4                 & 68.4                  & 36.1                 & 36.8                 & 36.8                  & 21.1                 & 28.3                 & 32.7                  \\
-		Ours                   & 55.4       & 63.3       & 65.2        & 29.4      & 33.7      &34.6              & 20.2                    & 26.3                    & 29.6                     \\ \hline
+		RelDN~\cite{zhang2019graphical}                   & -                 & -                 & -                  & -                & -                 & -                 & 21.1                 & 28.3                 & 32.7                  \\
+		Ours                   & 55.4       & 63.4       & 65.4        & 29.4      & 33.7      &34.6              & 20.2                    & 26.3                    & 29.6                     \\ \hline
 	\end{tabular}}
-
+% & 66.9                 & 68.4                 & 68.4                  & 36.1                 & 36.8                 & 36.8   
 \caption[Comparison with some advanced related works.]{Comparison with some advanced related works.}
 \label{tab:compare_recall}
 \end{table}
 
-From the above table, we can see that although our model does not reach State of the Arts, it can complete the VRD problem well. Note that the evaluation method of RelDN is different from ours, which causes its Recall@20 to be higher than actual.
+In Table~\ref{tab:compare_recall}, although out model can not reach State of the Arts, it can complete the VRD problem well. Note that the evaluation method in PredCLS and SGCLS of RelDN is different from ours, so it is not compared with out model.%所以不对其进行对比。
+
+Our model is completely based on the transformer structure, including object detection and predicate prediction, which are all done using transformer. It avoids some complex calculations such as object feature extraction and NMS when using Faster-RCNN,  and the transformer structure has less than half of the parameters of Faster-RCNN, which reduces hardware requirements.
+
+The reason why the recall is not very high is analyzed. One of the possible reason is that the object feature is not perfect. Unlike ROI Align, which only extracts the features from the object's own area, our object feature is a global feature, which only highlights the object, but may contain some background noise, which makes the feature not pure and then affects the result negatively. Another possible reason is that the model structure lacks some key information needed for relationship detection or the model itself is flawed. So the model structure needs to be further improved.
+%我们模型是完全基于transformer 结构的，包括object detection ，谓语预测，都是使用transformer完成的。避免了使用Faster-RCNN时的一些复杂的计算，object 特征提取 和NMS，并且transformer 结构拥有不到Faster-RCNN一半的参数，这减少了硬件需求。
+%我们的recall并没有很高，也是有一些原因的：首先object feature可能不太完美，它不像ROI Align是只提取object 自身的特征，我们的object feature是一种全局的特征，它只是突出了object，但可能含有一些背景噪声，造成feature并不干净，从而影响结果。 其次模型结构不够成熟，可能是结构的问题也可能是缺少一些关系检测所需的关键信息，这还需进一步改善。
 
 \subsection{Visible Results}
 In this section, we provide some visible experiment results of our model. There are three instances for respectively PredCLS, SGCLS and SGDET. The results are generated by the model illustrated in Fig.~\ref{fig:my_model}.
 
-\begin{figure}[h!]
+\begin{figure}[H]
 	\centering
 	\subfigure[Scenes graph with bounding boxes and class labels]{
 		\begin{minipage}[t]{6cm}
@@ -754,14 +806,14 @@ In this section, we provide some visible experiment results of our model. There 
 	\caption[An instance of PredCLS]{An instance of PredCLS.}
 	\label{fig:predcls}
 \end{figure}
-In Fig.~\ref{fig:predcls} we present an visible experiment result of PredCLS. We give an image from the VG test set with complex scene information (bounding boxes and classes of each object) to our  model to predicts the interactions between the objects in the image. For this single image, it has 5 relationships in the ground truth and our model predicts 3 relationship correctly. The wrong-predicted relationships are $ <window\ on\ bike >$ and $<seat\ on\ bike>$ and $<bike\ has\ seat>$. The possible reasons are: predicates such as \textit{`on' }and \textit{`has' } are the majority in our data set, so our model predicts them into these. But usually the result is not wrong, it's just not in the ground truth.
+Fig.~\ref{fig:predcls} presents an visible experiment result of PredCLS. We give an image from the VG test set with complex scene information (bounding boxes and classes of each object) to our  model to predicts the interactions between the objects in the image. For this single image, it has 5 relationships in the ground truth and our model predicts 3 relationship correctly. The wrong-predicted relationships are $ <window\ on\ bike >$ and $<seat\ on\ bike>$ and $<bike\ has\ seat>$. The possible reasons are: predicates such as \textit{`on' }and \textit{`has' } are the majority in our data set, so our model predicts them into these. But usually the result is not wrong, it's just not in the ground truth.
 
-\begin{figure}
+\begin{figure}[H]
 	\centering
 	\subfigure[Scenes graph with bounding boxes and class labels]{
 		\begin{minipage}[t]{6cm}
 			\centering
-			\includegraphics[width=0.7\linewidth]{figures/result/sgcls/img}
+			\includegraphics[width=0.9\linewidth]{figures/result/sgcls/img}
 	\end{minipage}}
 	\subfigure[Grund truth realtion.]{
 		\begin{minipage}[t]{4.5cm}
@@ -776,10 +828,11 @@ In Fig.~\ref{fig:predcls} we present an visible experiment result of PredCLS. We
 	\caption[An instance of SGCLS]{An instance of SGCLS.}
 	\label{fig:sgcls}
 \end{figure}
-In Fig.~\ref{fig:sgcls}  we present an visible experiment result of SGCLS. We give an image from the VG test set with scene information(only bounding boxes) to our  model to classifies the object classes and predicts the interactions between the objects in the image. For this single image it has 3 relationships in the ground truth and one relationship are predicted correctly by our model, the recall@50 is 33.3\%. The reason for the low recall of this picture is that we did not predict \textit{`building'} and \textit{`coat'}. The score of \textit{`building'} is only 0.72\% and the score of \textit{`coat'} is only 3.4\%. In subfigure (a), we can see that the bounding box of \textit{`women'} completely occludes the bounding box of \textit{`building'}, and they almost overlap, so it is difficult for our model to accurately classify the \textit{`building'}correctly.Similarly,
-The \textit{`coat'} is also blocked a lot by other objects.
+
+Fig.~\ref{fig:sgcls} presents an visible experiment result of SGCLS. We give an image from the VG test set with scene information(only bounding boxes) to our  model to classifies the object classes and predicts the interactions between the objects in the image. For this single image it has 3 relationships in the ground truth and one relationship are predicted correctly by our model, the recall@50 is 33.3\%. The reason for the low recall of this picture is that the model did not predict \textit{`building'} and \textit{`coat'}. The score of \textit{`building'} is only 0.72\% and the score of \textit{`coat'} is only 3.4\%. In subfigure (a), the bounding box of \textit{`women'} completely occludes the bounding box of \textit{`building'}, and they almost overlap, so it is difficult for our model to accurately classify the \textit{`building'}correctly. Similarly,
+the \textit{`coat'} is also blocked a lot by other objects.
  
- \begin{figure}[!h]
+ \begin{figure}[H]
  	\centering
  	\subfigure[Scenes graph with bounding boxes and class labels]{
  		\begin{minipage}[t]{6cm}
@@ -805,7 +858,7 @@ The \textit{`coat'} is also blocked a lot by other objects.
  	\caption[An instance of SGDET.]{An instance of SGDET.}
  	\label{fig:sgdet}
  \end{figure}
-In Fig.~\ref{fig:sgdet}  we present an visible experiment result of SGDET. We give only an image from the VG test set without other scene information to our model. The model need to detect the position and class of the bounding boxes for each object and predict the interactions between them. For this single image, we predicted one relationship correctly, and there are 3 ground true relationships. Our recall@50 is 33.3\%.  In subfigure (c), we can find some reasons for low recall. For example, the bounding box of \textit{`lamp' }we detected is much smaller than the ground truth, and the IoU between them is 0.23, which will not be detected. On the contrary, the \textit{`screen' }we detected matches the actual picture. Although we got the seemingly correct relationship of $ <scree\ on \ desk> $, it is not in our ground truth.
+Fig.~\ref{fig:sgdet} presents an visible experiment result of SGDET. It is given to our model only an image from the VG test set without other scene information. The model needs to detect the position and class of the bounding boxes for each object and predict the interactions between them. For this single image, the model predicts one relationship correctly, and there are 3 ground true relationships, so recall@50 is 33.3\%.  In subfigure (c), we can find some reasons for low recall. For example, the bounding box of \textit{`lamp' } model detected is much smaller than the ground truth, and the IoU between them is 0.23, which can not be detected. On the contrary, the \textit{`screen' } model detected matches the actual picture. Although we got the seemingly correct relationship of $ <scree\ on \ desk> $, it is not in our ground truth.
 
 
 
