@@ -3,6 +3,44 @@
 In this chapter, we first introduce the generative probability topic.
 They are the basic of our framework.
 
+\section{Convolutional Neural Network }
+
+Convolutional Neural Network (CNN) is a feed-forward neural network. Its artificial neurons can respond to a part of the surrounding units in the coverage area and have excellent performance for large-scale image processing.
+
+The convolutional neural network consists of one or more convolutional layers and a fully connected layer at the top, and also includes associated weights and a pooling layer. This structure enables convolutional neural networks to use the two-dimensional structure of the input data. Compared with other deep learning structures, convolutional neural networks can give better results in image and speech recognition. This model can also be trained using backpropagation algorithms. Compared with other deep, feed-forward neural networks, convolutional neural networks need to consider fewer parameters, making it an attractive deep learning structure.
+
+\subsection{Convolutional Layers}
+Each convolutional layer in a convolutional neural network consists of several convolutional units, and the parameters of each convolutional unit are optimized through the backpropagation algorithm. The purpose of the convolution operation is to extract different features of the input. The first layer of convolutional layer may only extract some low-level features such as edges, lines, and corners. More layers of networks can iteratively extract more complex features from low-level features. For example, regardless of the size of the input image, since each region has the same shared weight, using a 3x3 convolution kernel requires only 9 learnable parameters. Using regular weights on fewer parameters can avoid the vanishing gradient and explosive gradient problems that may occur during backpropagation.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.6\linewidth]{figures/conv}
+	\caption[An example of two-dimensional convolution]{A simple two dimensional convolution with a 3x3 convolutional kernel and stride = 1, the output size is 3x3 which is decided by image size, kernel size and stride.}
+	\label{fig:conv}
+\end{figure}
+
+\subsection{Pooling Layers}
+
+Pooling is another important concept in convolutional neural networks, which is actually a form of downsampling. There are many different forms of non-linear pooling functions, of which max pooling (An example see in Fig.~\ref{fig:maxpool}) is the most common. It divides the input image into several rectangular areas, and outputs the maximum value for each sub-area. Intuitively, the reason this mechanism can be effective is that after a feature is discovered, its precise position is far less important than its relative position with other features. The pooling layer will continuously reduce the size of the data space, so the number of parameters and the amount of calculation will also decrease, which also controls over-fitting to a certain extent. Usually, the pooling layer is periodically inserted between the convolutional layers of CNN.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.6\linewidth]{figures/maxpool}
+	\caption[An example of max pooling]{An example of max pooling with a 2x2 kernel and the stride is 2.}
+	\label{fig:maxpool}
+\end{figure}
+
+\subsection{Fully Connection Layers}
+
+In the CNN structure, after multiple convolutional layers and pooling layers, one or more fully connection layers are connected. Similar to Multilayer Perceptron (MLP), each neuron in the fully connection layer is fully connected to all neurons in the previous layer. The fully connection layer can integrate the local information with class distinction in the convolutional layer or the pooling layer. In order to improve the performance of the CNN network, the activation function of each neuron in the fully connected layer generally adopts the ReLU function. The output value of the last fully connected layer is passed to an output, which can be classified by softmax regression. This layer can also be called a softmax layer. For a specific classification task, it is very important to choose a suitable loss function. CNN has several commonly used loss functions, each with different characteristics. Generally, the fully connected layer of CNN has the same structure as MLP, and the training algorithm of CNN mostly uses BP algorithm.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.4\linewidth]{figures/fc}
+	\caption[The structure of fully connection layer]{The structure of fully connection layer.}
+	\label{fig:fclayer}
+\end{figure}
+
+
 \section{Transformer}
 \label{section:transformer}
 The Transformer is a model proposed by Vaswani, Ashish et al. in 2017~\cite{vaswani2017attention}  that uses the attention mechanism to increase the speed of model training. Compared with recurrent networks, such as Long short-term memory (LSTM), the Transformer can model long dependencies between input sequence elements and support parallel processing of sequence, and get higher both accuracy and performance than the popular RNN recurrent neural network. It mainly consists of two parts: the Encoder and Decoder. The structure of the Transformer is shown below as Fig.~\ref{fig:transformer}.
@@ -180,11 +218,11 @@ As shown on the left side of the figure, the result of detr's transformer encode
 
 \subsection{Transformer Decoder}
 
-detr passes the predicted target sequence obtained by the Transformer encoder through the Transformer decoder shown in the right half of Figure~\ref{fig:detrtr}, and decodes it in parallel to obtain the output sequence (rather than outputting it element by element like machine translation). Different from the traditional autogreesive mechanism, each layer can decode N targets. Due to the position invariance of the decoder, that is, the result of switching the input order is unchanged, in addition to the information of each pixel itself, the position information is also very important, so these N targets The input embedding must be different to produce different results, so learn the method in NLP, add positional encoding and add it for each layer.
+DETR passes the predicted target sequence obtained by the Transformer encoder through the Transformer decoder shown in the right half of Figure~\ref{fig:detrtr}, and decodes it in parallel to obtain the output sequence (rather than outputting it element by element like machine translation). Different from the traditional autogreesive mechanism, each layer can decode N targets. Due to the position invariance of the decoder, that is, the result of switching the input order is unchanged, in addition to the information of each pixel itself, the position information is also very important, so these N targets The input embedding must be different to produce different results, so learn the method in NLP, add positional encoding and add it for each layer.
 
 In addition, a fixed-size learnable object query is designed in DETR, which defines an embedding layer with a size of $ [100, 256] $, and uses its parameters as the object query. While training the network, the object query is also training, so that the most suitable query tensor is obtained and fixed.
 
-\begin{figure}
+\begin{figure}[h]
 	\centering
 	\includegraphics[width=0.7\linewidth]{figures/detr_tr}
 	\caption[Architecture of DETR's transformer]{Architecture of DETR's transformer, figture obtained from ~\cite{carion2020end}.}
@@ -259,10 +297,10 @@ $$
 The above formula means: first calculate the area of the smallest closed area of the two boxes, that is, the area of the smallest box that contains both the predicted box and the ground truth box, then calculate the IoU, and then calculate the area of the closed area that does not belong to the two boxes. The area accounts for the proportion of the closure area, and finally IoU is used to subtract this proportion to get GIoU.
 
 
-\subsection{Visualizing attention}
+\subsection{Visualization of  attention}
 As shown in Figure ~\ref{fig:detrattentionmap}, we can clearly see what detr pays more attention to a picture through the attention map, and the focus of each of his object features can be reflected in the attention map. Even DETR has good scalability and can be used for image segmentation.
 
-\begin{figure}
+\begin{figure}[h]
 	\centering
 	\includegraphics[width=1\linewidth]{figures/detr_attention_map}
 	\caption[The attention map of the model DETR]{The attention map of the model DETR. The Encoder Self-Attention is able to separate individual instances, and it can be well visualized in the attention map. mage source from Carion et al.~\cite{carion2020end} page 11.}

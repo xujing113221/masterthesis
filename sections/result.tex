@@ -403,7 +403,7 @@ Next, the object queries are fed into the object decoder to test their performan
 		Recall@100 & 65.0             & 65.3              & 65.1              \\ \hline
 	\end{tabular}
 
-\caption[The result of object query in PredCLS]{The result of object query in PredCLS.}
+\caption[The comparison of the object queries in PredCLS]{The comparison of the object queries in PredCLS.}
 \label{tab:result_object _query}
 \end{table}
 
@@ -601,11 +601,11 @@ It can be seen that the attention loss performs successfully on the attention ma
 \begin{table}[!h]
 	\centering
 	\begin{tabular}{c|ccc|ccc}
-		\bottomrule
+		\hline
 		\multirow{2}{*}{}           & \multicolumn{3}{c|}{PredCLS} & \multicolumn{3}{c}{SGCLS} \\ \cline{2-7} 
 		& R@20    & R@50    & R@100    & R@20   & R@50   & R@100   \\ \hline
 		without our attention  loss & 53.9      & 61.8       & 64.0       & 25.7     & 30.7     & 31.4   \\
-		with our attention loss     & 55.4       & 63.3       & 65.2        & 28.4      & 32.7      &33.6     \\ \bottomrule
+		with our attention loss     & \textbf{55.4}       & \textbf{63.3}       & \textbf{65.2 }       & \textbf{28.4 }     & \textbf{32.7}      &\textbf{33.6}     \\ \hline
 	\end{tabular}
 	
 	\caption[The result of attention loss in PredCLS and SGCLS]{The result of attention loss in PredCLS and SGCLS.}
@@ -631,33 +631,33 @@ In Figure~\ref{fig:relation_attetnion}, the context effect is expressed through 
 
 \begin{figure}[!htp]
 	\centering
-	\subfigure[]{
+	\subfigure[Scene graph]{
 		\begin{minipage}[t]{5cm}
 			\centering
 			\includegraphics[width=0.7\linewidth]{figures/result/relation_Attention/img1}
 		\end{minipage}}
-	\subfigure[]{
+	\subfigure[Ground truth relationships ]{
 		\begin{minipage}[t]{5cm}
 			\centering
 			\includegraphics[width=0.8\linewidth]{figures/result/relation_Attention/rel1}
 		\end{minipage}}
-	\subfigure[]{
+	\subfigure[Attention map]{
 		\begin{minipage}[t]{5cm}
 			\centering
 			\includegraphics[width=1\linewidth]{figures/result/relation_Attention/att1}
 	\end{minipage}}
 	
-	\subfigure[]{
+	\subfigure[Scene graph]{
 		\begin{minipage}[t]{5cm}
 			\centering
 			\includegraphics[width=0.7\linewidth]{figures/result/relation_Attention/img2}
 		\end{minipage}}
-	\subfigure[]{
+	\subfigure[Ground truth relationships]{
 		\begin{minipage}[t]{5cm}
 			\centering
 			\includegraphics[width=0.35\linewidth]{figures/result/relation_Attention/rel2}
 		\end{minipage}}
-	\subfigure[]{
+	\subfigure[Attention map]{
 		\begin{minipage}[t]{5cm}
 			\centering
 			\includegraphics[width=1\linewidth]{figures/result/relation_Attention/att2}
@@ -706,7 +706,7 @@ It can be concluded that the expression of object feature can affect the result 
 % 通过上表得出结论，object feature的表达会影响vrd的结果，当object feature 同时具有visual ，spatial 和semantic 信息时，效果最好。所以我们在relation decoder 中用visual feature ，spatial feautures和semantic feature一起表达object feature。
 
 \subsection{The Setting of Transformer }%transformer 模型的调整设置？
-In this thesis, three structures including encoder, object decoder, and relation decoder  contain multi-head attention module. There are two important parameters in multi-head attention should be adjusted, attention layers and attention head.
+In this thesis, three structures including encoder, object decoder, and relation decoder  contain multi-head attention module. There are two important parameters in multi-head attention should be adjusted, attention layers and attention heads.
 %在本论文中使用了encoder，object decoder，relation decoder三种包涵multi-head attention module的结构。在 multi-head attention 中有两个重要的参数，attention layers 和 attention head。我们调整了这两个参数 ：
 
 \begin{table}[H]
@@ -726,7 +726,7 @@ In this thesis, three structures including encoder, object decoder, and relation
 \label{tab:transfomerset}
 \end{table}
 
-As shown in Table~\ref{tab:transfomerset}, attention layers and attention head do not have a great influence on predicate prediction.The increase in the number of heads and layers can improve the recall slightly. However, as the parameters of Transformer become larger, the requirements for hardware resources become higher, so according to the conditions,  the multi-head attention module has 3 layers and 8 heads.
+As shown in Table~\ref{tab:transfomerset}, attention layers and attention heads do not have a great influence on predicate prediction.The increase in the number of heads and layers can improve the recall slightly. However, as the parameters of Transformer become larger, the requirements for hardware resources become higher, so according to the conditions,  the multi-head attention module has 3 layers and 8 heads.
 %如表所示，attention layers 和attention head 对谓语预测的影响并不是很大，head越大，layer越大都会稍微提高recall。但是随着参数变大，对硬件资源的要求就越大，所以根据在我们条件准许的情况下我们使用layer 为3 head为8的multi-head attention module。
 
 
@@ -746,7 +746,7 @@ As mentioned in Sec.~\ref{sec:imagefeture}, the model has two image features, on
 	\label{tab:encoder}
 \end{table}%image feature 的影响Influence of mage feature
 
-For the situation that predicate classification is more suitable without an encoder in Table~\ref{tab:encoder}, $  f_{vgg} $  is more suitable for obtaining predicates, which contains good visual features.The scene graph classification is more suitable for with encoders, and $ f_{en} $ is more suitable for object classification. Due to the above reasons, we adjusted the predicate classification model and no longer use the encoder.
+For the predicate classification is more suitable without an encoder as shown in Table~\ref{tab:encoder}, $  f_{vgg} $  is more suitable for obtaining predicates, which contains good visual features. The scene graph classification is more suitable for with encoders, and $ f_{en} $ is more suitable for object classification. Due to the above reasons, we adjusted the predicate classification model and no longer use the encoder.
 %从表中对于Predicate Classification更适用于没有encoder的情况，f_vgg更适用于去获取谓语，它包含很好的视觉特征。而Scene Graph Classification 更适用于有encoder，f_en更适合去做object classification。所以我们的模型也对其进行了调整。对于Predicate Classification我们就不使用encoder了。
 
 
@@ -782,7 +782,7 @@ The reason why the recall is not very high is analyzed. One of the possible reas
 %我们模型是完全基于transformer 结构的，包括object detection ，谓语预测，都是使用transformer完成的。避免了使用Faster-RCNN时的一些复杂的计算，object 特征提取 和NMS，并且transformer 结构拥有不到Faster-RCNN一半的参数，这减少了硬件需求。
 %我们的recall并没有很高，也是有一些原因的：首先object feature可能不太完美，它不像ROI Align是只提取object 自身的特征，我们的object feature是一种全局的特征，它只是突出了object，但可能含有一些背景噪声，造成feature并不干净，从而影响结果。 其次模型结构不够成熟，可能是结构的问题也可能是缺少一些关系检测所需的关键信息，这还需进一步改善。
 
-\subsection{Visible Results}
+\subsection{Qualitative Results}
 In this section, we provide some visible experiment results of our model. There are three instances for respectively PredCLS, SGCLS and SGDET. The results are generated by the model illustrated in Fig.~\ref{fig:my_model}.
 
 \begin{figure}[H]

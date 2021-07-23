@@ -417,6 +417,6 @@ $$\mathcal{L} = \mathcal{L}_{pred}+\mathcal{L}_{att} +\mathcal{L}_{obj} + \mathc
 
 where  $ \mathcal{L}_{pred} $ is the loss of predicate classification obtained by cross entropy loss function, $ \mathcal{L}_{att} $ is our attention loss, $ \mathcal{L}_{obj } $ is the loss of object classification, $ \mathcal{L}_{box} $ is the regression loss of the bounding box,  consists of a GIoU loss and a $l_1$ loss.
 
-For different evaluation models, $ \mathcal{L}  $ has different expressions. The above equation is for scene graph detection.  But$ \mathcal{L}_{box} $ is not needed for scene graph classification, and only $  \mathcal{L}_{pred}$ and $\mathcal{L}_{att} $ are required for predicate classification. 
+For different evaluation models, the total losses $ \mathcal{L}  $ has different expressions. The above equation is for scene graph detection.  But $ \mathcal{L}_{box} $ is not needed for scene graph classification, and only $  \mathcal{L}_{pred}$ and $\mathcal{L}_{att} $ are required for predicate classification. 
 %其中\mathcal{L}_{pred} 是通过 Cross Entropy Loss Function得到的谓语的loss，\mathcal{L}_{att} 是mathcal{L}_{att} ， \mathcal{L}_{obj} 是 object classifiy时需要的loss，\mathcal{L}_{box} 是bounding box的回归loss。对于不同的评估模型，\mathcal{L} 有不同的表达，上面的公式是对于sgdet的，当进行sgcls时，不需要\mathcal{L}_{box}，predcls时只需要\mathcal{L}_{pred}+\mathcal{L}_{att} 。
 
